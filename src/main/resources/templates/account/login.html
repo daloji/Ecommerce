@@ -102,7 +102,11 @@
                             <div class="w-100">
                                 <h3 style="text-align: center" class="mb-4">LOGIN</h3>
                             </div>
-                        </div>
+		                </div>
+		          	<div th:if="${param.error}">
+						   <p class="text-danger"
+						        th:utext="${session.SPRING_SECURITY_LAST_EXCEPTION.message}">Error message</p>
+					</div> 
                         <div th:if="${error}" class="alert alert-danger" role="alert">
                             [[${error}]]
                         </div>
@@ -111,7 +115,7 @@
                                 <label class="label" for="name">Email</label>
                                 <input type="email"
                                        class="form-control"
-                                       name="email"
+                                       name="username"
                                        placeholder="Email"
                                        th:value="${email}" required>
                             </div>
@@ -131,7 +135,7 @@
                             <div class="form-group d-md-flex">
                                 <div class="w-50 text-left">
                                     <label class="checkbox-wrap checkbox-primary mb-0">Remember Me
-                                        <input type="checkbox" th:name="rmb" th:if="${email != null ? 'checked' : ''}">
+                                        <input type="checkbox" th:name="remember-me" th:if="${email != null ? 'checked' : ''}">
                                         <span class="checkmark"></span>
                                     </label>
                                 </div>

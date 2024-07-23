@@ -1,30 +1,40 @@
 package com.ecommerce.cozashop.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import com.ecommerce.cozashop.service.UserService;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
+	
+	
+	private static final String KEY ="ABCDEFGHIJKLMOPWRSTQUWXYZ1234567890";
 
+	private String[] authorizedURL = {"/","/index" ,"/home","/login", "/product","/product-detail",
+			                         "/error", "/register","/forgot-password","/register-new", "/logout"};
+	
+    @Autowired
+    private UserService userService;
+	
+	@Autowired
+    private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
+	
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-
 		http
 		.authorizeHttpRequests(authConfig -> {
-			authConfig.requestMatchers(HttpMethod.GET, "/","/index" ,
-					"/home","/login", "/product","/error", "/login-error", "/logout").permitAll();
+			authConfig.requestMatchers(HttpMethod.GET, authorizedURL).permitAll();
+			authConfig.requestMatchers(HttpMethod.POST, "/register-new","/reset-password").permitAll();
 			authConfig.anyRequest().authenticated();
 			/*authConfig.requestMatchers(HttpMethod.GET, "/user").hasRole("USER");
 			authConfig.requestMatchers(HttpMethod.GET, "/admin").hasRole("ADMIN");
@@ -36,9 +46,14 @@ public class WebSecurityConfig {
 		.formLogin(login -> {
 			login.loginPage("/login");
 			login.defaultSuccessUrl("/");
-			login.failureUrl("/login-error");
-		}
-				)
+			login.loginProcessingUrl("/login");
+			login.successHandler(customAuthenticationSuccessHandler);
+			
+		})
+		.rememberMe(config -> {
+			config.key(KEY) .tokenValiditySeconds(3600*24);
+			config.userDetailsService(userService);
+		})
 		.logout(logout -> {
 			logout.logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
 			logout.logoutSuccessUrl("/");
@@ -46,6 +61,7 @@ public class WebSecurityConfig {
 			logout.invalidateHttpSession(true);
 		});
 
+		
 		return http.build();
 	}
 
@@ -55,18 +71,5 @@ public class WebSecurityConfig {
 		return (web) -> web.ignoring().requestMatchers("/images/**","/fonts/**", "/js/**", "/css/**", "/vendor/**");
 	}
 
-
-
-	@Bean
-	public UserDetailsService userDetailsService() {
-		UserDetails user =
-				User.withDefaultPasswordEncoder()
-				.username("user")
-				.password("password")
-				.roles("USER")
-				.build();
-
-		return new InMemoryUserDetailsManager(user);
-	}
 
 }

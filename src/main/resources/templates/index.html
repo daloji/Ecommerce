@@ -49,10 +49,13 @@
 				</div>
 
 				<div class="right-top-bar flex-w h-full">
-					<a th:if="${session.isEmpty()}" th:href="@{/login}" class="flex-c-m trans-04 p-lr-25">
+					<a sec:authorize="isAnonymous()" th:href="@{/login}" class="flex-c-m trans-04 p-lr-25">
 						Sign in
 					</a>
-					<a th:if="${!session.isEmpty()}" th:href="@{/logout}" class="flex-c-m trans-04 p-lr-25">
+					<a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="flex-c-m trans-04 p-lr-25">
+						My account
+					</a>
+					<a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="flex-c-m trans-04 p-lr-25">
 						Log out
 					</a>
 				</div>
@@ -93,7 +96,7 @@
 					<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-modal-search">
 						<i class="zmdi zmdi-search"></i>
 					</div>
-
+	
 					<a th:href="@{/shopping-cart}" class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti"
 					   th:if="${!session.isEmpty()}"
 					   th:data-notify="${session.totalCart}">
@@ -300,7 +303,7 @@
 		<!--Show all products-->
 		<div class="row isotope-grid">
 			<!--Show product by category, T-Shirts and Polo-->
-			<div th:each="prod : ${product_list}" th:if="*{prod.productCategory.id == 1 || prod.productCategory.id == 6}" class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item polo">
+			<div th:each="prod : ${session.product_list}" th:if="*{prod.productCategory.id == 1 || prod.productCategory.id == 6}" class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item polo">
 				<!-- Block2 -->
 				<div class="block2">
 					<div class="block2-pic hov-img0">
