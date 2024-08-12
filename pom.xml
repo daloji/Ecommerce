@@ -120,7 +120,60 @@
                     </excludes>
                 </configuration>
             </plugin>
+            
         </plugins>
     </build>
+    
+ <profiles>
+   <profile>
+      <id>docker</id>
+      <build>
+		  <plugins>
+			<plugin>
+            <groupId>io.fabric8</groupId>
+            <artifactId>docker-maven-plugin</artifactId>
+            <configuration>
+              <images>
+                <image>
+                  <alias>Coza shop</alias>
+                  <name>coza/%a-native:%t</name>
+                  <registry>${docker.registry}</registry>
+                  <build>
+                    <contextDir>${project.basedir}</contextDir>
+                    <dockerFile>${project.basedir}/src/main/resources/docker/Dockerfile</dockerFile>
+                  </build>
+                  <run>
+				   <network>
+                      <mode>host</mode>
+                    </network>
+					<ports>
+                      <port>9999:9999</port>
+                    </ports>
+                    <wait>
+                     <log>.*powered by Quarkus.*started in.*</log>
+                      <time>3000</time>
+                    </wait>
+                    <log>
+                      <prefix>smf-pdusession-server</prefix>
+                      <enabled>true</enabled>
+                    </log>
+                  </run>
+                </image>
+              </images>
+            </configuration>
+              <executions>
+     <execution>
+        <id>default</id>
+        <phase>install</phase>
+        <goals>
+            <goal>build</goal>
+        </goals>
+     </execution>	
+   </executions>	
+          </plugin>   
+		  </plugins>		  
+	  </build>
+    </profile> 
+  </profiles>
 
 </project>
