@@ -1,52 +1,37 @@
 package com.ecommerce.cozashop.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+
+@Entity
+@Table(name = "address")
+@Data
+@NoArgsConstructor
+@RequiredArgsConstructor
 public class Address {
-    private String address;
-    private String district;
-    private String city;
-    private String country;
 
-    public Address(String address, String district, String city, String country) {
-        this.address = address;
-        this.district = district;
-        this.city = city;
-        this.country = country;
-    }
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "id")
+	private Long id;
 
-    public String getAddress() {
-        return address;
-    }
+	private String road;
+	private String district;
+	private String city;
+	private String country;
+	
+	@NonNull
+	@OneToOne(mappedBy = "address")
+	private User user;
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
 
-    public String getDistrict() {
-        return district;
-    }
-
-    public void setDistrict(String district) {
-        this.district = district;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    @Override
-    public String toString() {
-        return address + ", " + district + " District, " + city + " City, " + country;
-    }
 }

@@ -32,7 +32,6 @@ public class UserService implements UserDetailsService {
 			throw new UsernameNotFoundException("user not found");
 		}
 		return user;
-		
 	}
     
 
@@ -46,7 +45,6 @@ public class UserService implements UserDetailsService {
     	}
         return find;
     }
-
 
     public User getUserByEmail(String email) {
         return userRepo.findByEmail(email);
@@ -69,6 +67,11 @@ public class UserService implements UserDetailsService {
         user.setEnabled(true);
 
         userRepo.save(user);
+    }
+    
+    
+    public void updateAccount(User user) {
+    	userRepo.save(user);
     }
 
     public String getPasswordByEmail(String email) {

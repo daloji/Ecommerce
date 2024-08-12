@@ -15,6 +15,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.Data;
@@ -65,9 +66,12 @@ public class User implements UserDetails {
     
     @NonNull
     private Boolean accountNonExpired;
-        
-
+    
     @NonNull
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id", referencedColumnName = "id")
+    private Address address;
+        
     @ManyToOne
     @JoinColumn(name="role_id", nullable=false)
     @EqualsAndHashCode.Exclude // Do not use this field in equals and hashcode
@@ -86,7 +90,6 @@ public class User implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -115,4 +118,5 @@ public class User implements UserDetails {
 		return enabled;
 	}
     
+	
 }

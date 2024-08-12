@@ -12,11 +12,8 @@ import com.ecommerce.cozashop.model.ProductItem;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Price;
-import com.stripe.model.Product;
-import com.stripe.model.ProductSearchResult;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.PriceCreateParams;
-import com.stripe.param.ProductSearchParams;
 import com.stripe.param.checkout.SessionCreateParams;
 
 @Service

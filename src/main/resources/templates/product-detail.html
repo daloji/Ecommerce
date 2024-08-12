@@ -46,16 +46,20 @@
 				<div class="content-topbar flex-sb-m h-full container">
 					<div class="left-top-bar">
 						Free shipping for standard order over $100
-					</div>
-
+					</div>					
+					
 					<div class="right-top-bar flex-w h-full">
-						<a th:if="${session.isEmpty()}" th:href="@{/login}" class="flex-c-m trans-04 p-lr-25">
+						<a sec:authorize="isAnonymous()" th:href="@{/login}" class="flex-c-m trans-04 p-lr-25">
 							Sign in
 						</a>
-						<a th:if="${!session.isEmpty()}" th:href="@{/logout}" class="flex-c-m trans-04 p-lr-25">
-							Log out
+						<a sec:authorize="isAuthenticated()" th:href="@{/my-account}" class="flex-c-m trans-04 p-lr-25">
+							My account
 						</a>
+						<a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="flex-c-m trans-04 p-lr-25">
+							Log out
+						</a>	
 					</div>
+					
 				</div>
 			</div>
 
@@ -220,7 +224,7 @@
 						<!--  -->
 						<div class="flex-w flex-m p-l-100 p-t-40 respon7">
 							<div class="flex-m bor9 p-r-10 m-r-11">
-								<a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 js-addwish-detail tooltip100" data-tooltip="Add to Wishlist">
+								<a href="#"  class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 js-addwish-detail tooltip100" data-tooltip="Add to Wishlist">
 									<i class="zmdi zmdi-favorite"></i>
 								</a>
 							</div>
@@ -529,7 +533,7 @@
 						$('.count-cart').attr("data-notify", data);
 					}
 				})
-					swal(nameProduct, "is added to cart !", "success");
+					swal(nameProduct, "is added to 11cart !", "success");
 
 			
 			});

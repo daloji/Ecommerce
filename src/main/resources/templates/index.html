@@ -52,9 +52,12 @@
 					<a sec:authorize="isAnonymous()" th:href="@{/login}" class="flex-c-m trans-04 p-lr-25">
 						Sign in
 					</a>
-					<a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="flex-c-m trans-04 p-lr-25">
+					<a sec:authorize="isAuthenticated()" th:href="@{/my-account}" class="flex-c-m trans-04 p-lr-25">
 						My account
 					</a>
+					<a sec:authorize="isAuthenticated()" th:href="@{/update-password}" class="flex-c-m trans-04 p-lr-25">
+						Update Password
+					 </a>
 					<a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="flex-c-m trans-04 p-lr-25">
 						Log out
 					</a>
@@ -79,6 +82,10 @@
 
 						<li class="label1" data-label1="hot">
 							<a th:href="@{/product}">Shop</a>
+						</li>
+						
+						<li>
+							<a th:href="@{/blog}">Blog</a>
 						</li>
 
 						<li>
@@ -303,7 +310,7 @@
 		<!--Show all products-->
 		<div class="row isotope-grid">
 			<!--Show product by category, T-Shirts and Polo-->
-			<div th:each="prod : ${session.product_list}" th:if="*{prod.productCategory.id == 1 || prod.productCategory.id == 6}" class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item polo">
+			<div th:each="prod : ${product_list}" th:if="*{prod.productCategory.id == 1 || prod.productCategory.id == 6}" class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item polo">
 				<!-- Block2 -->
 				<div class="block2">
 					<div class="block2-pic hov-img0">
@@ -599,7 +606,7 @@
 	$('.js-addwish-b2').each(function(){
 		var nameProduct = $(this).parent().parent().find('.js-name-b2').html();
 		$(this).on('click', function(){
-			swal(nameProduct, "is added to wishlist !", "success");
+			swal(nameProduct, "is added to wishlistd !", "success");
 
 			$(this).addClass('js-addedwish-b2');
 			$(this).off('click');

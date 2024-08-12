@@ -1,20 +1,22 @@
 package com.ecommerce.cozashop.controller;
 
-import com.ecommerce.cozashop.model.*;
-import com.ecommerce.cozashop.service.*;
-import com.fasterxml.jackson.annotation.JsonIgnoreType;
-import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.query.JSqlParserUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.ecommerce.cozashop.model.ImageProduct;
+import com.ecommerce.cozashop.model.ProductItem;
+import com.ecommerce.cozashop.model.ProductSize;
+import com.ecommerce.cozashop.service.ImageProductService;
+import com.ecommerce.cozashop.service.ProductItemService;
+import com.ecommerce.cozashop.service.ProductService;
+import com.ecommerce.cozashop.service.ProductSizeService;
+import com.ecommerce.cozashop.service.SizeOptionService;
 
 @Controller
 public class ProductController {
@@ -42,6 +44,9 @@ public class ProductController {
         model.addAttribute("product_item_list", productItemService.getProductItems());
         return "product";
     }
+    
+    
+    
 
     @GetMapping("/product-detail/{id}")
     public String showProductDetail(@PathVariable(name = "id") Long id, Model model) {

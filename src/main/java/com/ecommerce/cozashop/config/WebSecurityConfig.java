@@ -19,22 +19,24 @@ public class WebSecurityConfig {
 	
 	private static final String KEY ="ABCDEFGHIJKLMOPWRSTQUWXYZ1234567890";
 
-	private String[] authorizedURL = {"/","/index" ,"/home","/login", "/product","/product-detail",
-			                         "/error", "/register","/forgot-password","/register-new", "/logout"};
+	private String[] authorizedURL = {"/","/index","/blog" ,"/blog-detail","/home","/login", "/product","/product-detail/*",
+			                         "/error", "/register","/forgot-password","/register-new",
+			                         "/add-to-cart/*/*",  "/update-password","/logout"};
 	
     @Autowired
     private UserService userService;
+    
 	
 	@Autowired
     private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
 	
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
+		
 		http
 		.authorizeHttpRequests(authConfig -> {
 			authConfig.requestMatchers(HttpMethod.GET, authorizedURL).permitAll();
-			authConfig.requestMatchers(HttpMethod.POST, "/register-new","/reset-password").permitAll();
+			authConfig.requestMatchers(HttpMethod.POST, "/register-new","/reset-password","/update-user").permitAll();
 			authConfig.anyRequest().authenticated();
 			/*authConfig.requestMatchers(HttpMethod.GET, "/user").hasRole("USER");
 			authConfig.requestMatchers(HttpMethod.GET, "/admin").hasRole("ADMIN");

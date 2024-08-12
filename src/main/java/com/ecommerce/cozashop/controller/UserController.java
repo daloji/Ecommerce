@@ -1,7 +1,13 @@
 package com.ecommerce.cozashop.controller;
 
+import static java.util.Objects.nonNull;
+import static java.util.Objects.isNull;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +15,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.ecommerce.cozashop.model.Address;
+import com.ecommerce.cozashop.model.CartItem;
+import com.ecommerce.cozashop.model.UpdateUser;
 import com.ecommerce.cozashop.model.User;
 import com.ecommerce.cozashop.service.CartItemService;
 import com.ecommerce.cozashop.service.CookieService;
@@ -91,7 +100,7 @@ public class UserController {
                                   Model model) {
 
         try {
-            if (!userService.checkEmailAlreadyExists(user.getEmail())) {
+            if (userService.checkEmailAlreadyExists(user.getEmail())) {
                 model.addAttribute("error", "Email address already exists");
                 return "account/register";
             } else if (!userService.checkPhoneAlreadyExists(user.getPhone())) {
@@ -111,6 +120,7 @@ public class UserController {
 
     @GetMapping("/forgot-password")
     public String showForgotPassword() {
+    	
         return "account/forgot-password";
     }
     
@@ -123,4 +133,68 @@ public class UserController {
     	}
         return "account/forgot-password";
     }
+    
+    
+    @GetMapping("/my-account")
+	public String showAccount(Model model) {
+    	Authentication authentification = SecurityContextHolder.getContext().getAuthentication();
+		if(nonNull(authentification) && !( authentification instanceof AnonymousAuthenticationToken)) {
+			User user = (User) authentification.getPrincipal();
+			List<CartItem> list = cartItemService.getAllProductCartWithUser(user.getId()); 
+			model.addAttribute("mail", user.getEmail());
+			model.addAttribute("firstName", user.getFirst_name());
+			model.addAttribute("lastname", user.getLast_name());
+		}
+		
+		return "account/my-account";
+	}
+
+    
+    @GetMapping("/update-password")
+  	public String updatePassword(Model model) {
+      	Authentication authentification = SecurityContextHolder.getContext().getAuthentication();
+  		if(nonNull(authentification) && !( authentification instanceof AnonymousAuthenticationToken)) {
+  			User user = (User) authentification.getPrincipal();
+  
+  		}
+  		
+  		
+  		return "account/update-password";
+  	}
+    
+    @PostMapping("/update-user")
+   	public String postUser(@ModelAttribute UpdateUser updateuser) {
+       	Authentication authentification = SecurityContextHolder.getContext().getAuthentication();
+       	if(nonNull(authentification) && !( authentification instanceof AnonymousAuthenticationToken)) {
+       		User user = (User) authentification.getPrincipal();
+       		if(nonNull(updateuser.getPhone())) {
+           		user.setPhone(updateuser.getPhone());
+           	}
+       		if(nonNull(updateuser.getAdresse())) {
+       			Address adresse = user.getAddress();
+       			if(isNull(adresse)) {
+       				adresse = new Address();
+       			}
+       			if(nonNull(updateuser.getAdresse().getRoad())) {
+       				adresse.setRoad(updateuser.getAdresse().getRoad());
+       			}
+       			if(nonNull(updateuser.getAdresse().getCity())) {
+       				adresse.setCity(updateuser.getAdresse().getCity());
+       			}
+       			if(nonNull(updateuser.getAdresse().getCountry())) {
+       				adresse.setCountry(updateuser.getAdresse().getCountry());
+       			}
+       			if(nonNull(updateuser.getAdresse().getDistrict())) {
+       				adresse.setDistrict(updateuser.getAdresse().getDistrict());
+       			}
+       			user.setAddress(adresse);
+       		}
+       
+       		userService.updateAccount(user);
+       	}
+       	
+       	
+   		return "account/my-account";
+   	}
+    
 }
