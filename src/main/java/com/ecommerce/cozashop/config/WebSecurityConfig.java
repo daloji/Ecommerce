@@ -26,7 +26,6 @@ public class WebSecurityConfig {
     @Autowired
     private UserService userService;
     
-	
 	@Autowired
     private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
 	
@@ -66,12 +65,11 @@ public class WebSecurityConfig {
 		
 		return http.build();
 	}
-
+	
 
 	@Bean
 	WebSecurityCustomizer configureWebSecurity() {
 		return (web) -> web.ignoring().requestMatchers("/images/**","/fonts/**", "/js/**", "/css/**", "/vendor/**");
 	}
-
 
 }

@@ -100,7 +100,7 @@
                     <div class="login-wrap p-4 p-md-5">
                         <div class="d-flex">
                             <div class="w-100">
-                                <h3 style="text-align: center" class="mb-4">LOGIN</h3>
+                                <h3 style="text-align: center" class="mb-4" data-th-text="#{label.login}"></h3>
                             </div>
 		                </div>
 		          	<div th:if="${param.error}">
@@ -120,7 +120,7 @@
                                        th:value="${email}" required>
                             </div>
                             <div class="form-group mb-3">
-                                <label class="label" for="password">Password</label>
+                                <label class="label" for="password" data-th-text="#{label.password}"></label>
                                 <input type="password"
                                        class="form-control"
                                        name="password"
@@ -129,22 +129,22 @@
                                        required>
                             </div>
                             <div class="form-group">
-                                <button type="submit" class="form-control btn btn-primary rounded submit px-3">LOGIN
+                                <button type="submit" class="form-control btn btn-primary rounded submit px-3" data-th-text="#{label.buttonlogin}">
                                 </button>
                             </div>
                             <div class="form-group d-md-flex">
                                 <div class="w-50 text-left">
-                                    <label class="checkbox-wrap checkbox-primary mb-0">Remember Me
+                                    <label class="checkbox-wrap checkbox-primary mb-0">Se souvenir de moi
                                         <input type="checkbox" th:name="remember-me" th:if="${email != null ? 'checked' : ''}">
                                         <span class="checkmark"></span>
                                     </label>
                                 </div>
                                 <div class="w-50 text-md-right">
-                                    <a th:href="@{/forgot-password}">Forgot Password</a>
+                                    <a th:href="@{/forgot-password}" data-th-text="#{label.forgotPassword}"></a>
                                 </div>
                             </div>
                         </form>
-                        <p class="text-center">Not a member? <a th:href="@{/register}">Sign Up</a></p>
+                        <p class="text-center" data-th-text="#{label.not-a-member}"> <a th:href="@{/register}" data-th-text="#{label.sign-up}"></a></p>
                     </div>
                 </div>
             </div>

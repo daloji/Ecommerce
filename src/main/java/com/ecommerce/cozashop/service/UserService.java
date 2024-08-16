@@ -16,9 +16,9 @@ import com.ecommerce.cozashop.repository.UserRepo;
 
 @Service
 public class UserService implements UserDetailsService {
-	
+
 	@Autowired
-    private UserRepo userRepo;
+	private UserRepo userRepo;
 
 
 	@Autowired
@@ -33,57 +33,64 @@ public class UserService implements UserDetailsService {
 		}
 		return user;
 	}
-    
 
-	
 
-    public boolean checkEmailAlreadyExists(String email) {
-    	boolean find = true;
-    	User user = userRepo.findByEmail(email);
-    	if(isNull(user)) {
-    		find = false;
-    	}
-        return find;
-    }
 
-    public User getUserByEmail(String email) {
-        return userRepo.findByEmail(email);
-    }
 
-    public Long getIdUserByEmail(String email) {
-        return userRepo.findIdByEmail(email);
-    }
+	public boolean checkEmailAlreadyExists(String email) {
+		boolean find = true;
+		User user = userRepo.findByEmail(email);
+		if(isNull(user)) {
+			find = false;
+		}
+		return find;
+	}
 
-    public void registerAccount(User user) {
-        Role role = new Role();
+	public User getUserByEmail(String email) {
+		return userRepo.findByEmail(email);
+	}
 
-        String encodeStr = encoder.encode(user.getPassword());
-        role.setId(1);
-        user.setPassword(encodeStr);
-        user.setRole(role);
-        user.setAccountNonExpired(true);
-        user.setAccountNonLocked(true);
-        user.setCredentialsNonExpired(true);
-        user.setEnabled(true);
+	public Long getIdUserByEmail(String email) {
+		return userRepo.findIdByEmail(email);
+	}
 
-        userRepo.save(user);
-    }
-    
-    
-    public void updateAccount(User user) {
-    	userRepo.save(user);
-    }
+	public void registerAccount(User user) {
+		Role role = new Role();
 
-    public String getPasswordByEmail(String email) {
-        return userRepo.getPassword(email);
-    }
+		String encodeStr = encoder.encode(user.getPassword());
+		role.setId(1);
+		user.setPassword(encodeStr);
+		user.setRole(role);
+		user.setAccountNonExpired(true);
+		user.setAccountNonLocked(true);
+		user.setCredentialsNonExpired(true);
+		user.setEnabled(true);
 
-    public List<User> show() {
-        return userRepo.findAll();
-    }
+		userRepo.save(user);
+	}
 
-    public boolean checkPhoneAlreadyExists(String phone) {
-        return userRepo.findByPhone(phone) == null ? true : false;
-    }
-    
+
+	public void updatePassword(String newPassword ,String email) {
+		User user = getUserByEmail(email);
+		user.setPassword(encoder.encode(newPassword));
+		userRepo.save(user);
+	}
+
+
+	public void updateAccount(User user) {
+		userRepo.save(user);
+	}
+
+	public String getPasswordByEmail(String email) {
+		return userRepo.getPassword(email);
+	}
+
+	public List<User> show() {
+		return userRepo.findAll();
+	}
+
+	public boolean checkPhoneAlreadyExists(String phone) {
+		return userRepo.findByPhone(phone) == null ? true : false;
+	}
+
 }

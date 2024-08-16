@@ -49,11 +49,16 @@
 				</div>
 
 				<div class="right-top-bar flex-w h-full">
-					<a sec:authorize="isAnonymous()" th:href="@{/login}" class="flex-c-m trans-04 p-lr-25">
-						Sign in
+					<a th:href="@{/?lang=en}" class="flex-c-m trans-04 p-lr-25">
+						EN
 					</a>
-					<a sec:authorize="isAuthenticated()" th:href="@{/my-account}" class="flex-c-m trans-04 p-lr-25">
-						My account
+					<a th:href="@{/?lang=fr}" class="flex-c-m trans-04 p-lr-25">
+						FR
+					</a>
+					<a sec:authorize="isAnonymous()" th:href="@{/login}" data-th-text="#{label.sign}" class="flex-c-m trans-04 p-lr-25">
+						
+					</a>
+					<a sec:authorize="isAuthenticated()" th:href="@{/my-account}" data-th-text="#{label.my-account}" class="flex-c-m trans-04 p-lr-25">
 					</a>
 					<a sec:authorize="isAuthenticated()" th:href="@{/update-password}" class="flex-c-m trans-04 p-lr-25">
 						Update Password
@@ -61,6 +66,7 @@
 					<a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="flex-c-m trans-04 p-lr-25">
 						Log out
 					</a>
+	
 				</div>
 			</div>
 		</div>

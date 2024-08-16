@@ -71,6 +71,7 @@ public class CartController {
 
 		return new ModelAndView("shopping-cart"); 
 	}
+	
 
 	@GetMapping("/add-to-cart/{id}/{qty}")
 	@ResponseBody

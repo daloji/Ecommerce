@@ -75,7 +75,6 @@ public class OrderController {
 	@PostMapping("/check-out")
 	public ModelAndView checkOut(@ModelAttribute CartItem item, @ModelAttribute Address fullAddress) {
 
-
 		Authentication authentification = SecurityContextHolder.getContext().getAuthentication();
 		if(nonNull(authentification) && !( authentification instanceof AnonymousAuthenticationToken)) {
 			User user = (User) authentification.getPrincipal();

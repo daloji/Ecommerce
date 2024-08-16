@@ -43,11 +43,11 @@ public class HomeController {
 		return "index";
 	}
 
+	
 	@GetMapping("/about")
 	public String showAbout() {
 		return "about";
 	}
-
 	
 	@GetMapping("/")
 	public String afterConnection(Model model) {

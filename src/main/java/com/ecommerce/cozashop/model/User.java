@@ -53,6 +53,9 @@ public class User implements UserDetails {
     private String phone;
 
     @NonNull
+    private String oldpassword;
+    
+    @NonNull
     private String password;
 
     @NonNull
@@ -118,5 +121,4 @@ public class User implements UserDetails {
 		return enabled;
 	}
     
-	
 }
