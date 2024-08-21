@@ -50,8 +50,7 @@
         <!-- Topbar -->
         <div class="top-bar">
             <div class="content-topbar flex-sb-m h-full container">
-                <div class="left-top-bar">
-                    Free shipping for standard order over $100
+                <div class="left-top-bar" th:text="#{label.alert-info}">
                 </div>
             </div>
         </div>
@@ -110,6 +109,9 @@
                         <div th:if="${error}" class="alert alert-danger" role="alert">
                             [[${error}]]
                         </div>
+						<div th:if="${info}" class="alert alert-success" role="alert">
+						     [[${info}]]
+						</div>
                         <form th:action="@{/login}" th:object="${user}" class="signin-form" method="post">
                             <div class="form-group mb-3">
                                 <label class="label" for="name">Email</label>
@@ -134,7 +136,8 @@
                             </div>
                             <div class="form-group d-md-flex">
                                 <div class="w-50 text-left">
-                                    <label class="checkbox-wrap checkbox-primary mb-0">Se souvenir de moi
+                                    <label class="checkbox-wrap checkbox-primary mb-0">
+										 <a  data-th-text="#{label.remeberMe}"></a>
                                         <input type="checkbox" th:name="remember-me" th:if="${email != null ? 'checked' : ''}">
                                         <span class="checkmark"></span>
                                     </label>
@@ -144,7 +147,11 @@
                                 </div>
                             </div>
                         </form>
-                        <p class="text-center" data-th-text="#{label.not-a-member}"> <a th:href="@{/register}" data-th-text="#{label.sign-up}"></a></p>
+                        <p class="text-center">
+							 <a  data-th-text="#{label.not-a-member}"></a>
+							 <a  th:href="@{/register}" data-th-text="#{label.sign-up}"></a>
+						</p>
+						
                     </div>
                 </div>
             </div>

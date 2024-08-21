@@ -16,6 +16,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.Data;
@@ -80,6 +81,13 @@ public class User implements UserDetails {
     @EqualsAndHashCode.Exclude // Do not use this field in equals and hashcode
     @ToString.Exclude   // Do not use this field in toString()
     private Role role;
+    
+    
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    @EqualsAndHashCode.Exclude // Do not use this field in equals and hashcode
+    @ToString.Exclude   // Do not use this field in toString()
+    private PasswordResetToken passwordToken;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @EqualsAndHashCode.Exclude // Do not use this field in equals and hashcode
@@ -96,6 +104,7 @@ public class User implements UserDetails {
 		return null;
 	}
 
+	
 	@Override
 	public String getUsername() {
 		return email;

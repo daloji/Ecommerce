@@ -100,42 +100,46 @@
           <div class="login-wrap p-4 p-md-5">
             <div class="d-flex">
               <div class="w-100">
-                <h3 style="text-align: center" class="mb-4">CREATE AN ACCOUNT</h3>
+                <h3 style="text-align: center" class="mb-4" data-th-text="#{label.create-account}"></h3>
               </div>
             </div>
             <div th:if="${error}" class="alert alert-danger" role="alert">
               [[${error}]]
             </div>
             <form th:action="@{/register-new}" th:object="${user}" class="signin-form" method="post">
+			  <div class="form-group mb-3">
+				  <label class="label" for="lastname" data-th-text="#{label.last-name}"></label>
+				  <input type="text" class="form-control" name="last_name" id="lname" th:placeholder="#{label.placeHolder-last-name}" required>
+		       </div>
               <div class="form-group mb-3">
-                <label class="label" for="firstname">First Name</label>
-                <input type="text" class="form-control" name="first_name" id="fname" placeholder="Enter your first name" required>
+                <label class="label" for="firstname" data-th-text="#{label.first-name}"></label>
+                <input type="text" class="form-control" name="first_name" id="fname" th:placeholder="#{label.placeHolder-first-name}" required>
+              </div>
+        
+              <div class="form-group mb-3">
+                <label class="label" for="name" data-th-text="#{label.mail}"></label>
+                <input type="email" class="form-control" name="email" th:placeholder="#{label.placeHolder-mail}" required>
               </div>
               <div class="form-group mb-3">
-                <label class="label" for="lastname">Last name</label>
-                <input type="text" class="form-control" name="last_name" id="lname" placeholder="Enter your last name" required>
+                <label class="label" for="phone" data-th-text="#{label.phone}"></label>
+                <input type="text" class="form-control" name="phone" id="phone" th:placeholder="#{label.placeHolder-phone}" required>
               </div>
               <div class="form-group mb-3">
-                <label class="label" for="name">email</label>
-                <input type="email" class="form-control" name="email" placeholder="Enter your email" required>
+                <label class="label" for="password" data-th-text="#{label.password}"></label>
+                <input type="password" class="form-control" name="password" id="password" th:placeholder="#{label.placeHolder-password}" required>
               </div>
               <div class="form-group mb-3">
-                <label class="label" for="phone">Phone</label>
-                <input type="text" class="form-control" name="phone" id="phone" placeholder="Enter your phone number" required>
-              </div>
-              <div class="form-group mb-3">
-                <label class="label" for="password">Password</label>
-                <input type="password" class="form-control" name="password" id="password" placeholder="Password" required>
-              </div>
-              <div class="form-group mb-3">
-                <label class="label" for="password">Confirm Password</label>
-                <input type="password" class="form-control" id="confirm_password" placeholder="Enter your confirm password" required>
+                <label class="label" for="password" data-th-text="#{label.confirm-password}"></label>
+                <input type="password" class="form-control" id="confirm_password" th:placeholder="#{label.placeHolder-confirm-password}" required>
               </div>
               <div class="form-group">
-                <button type="submit" class="form-control btn btn-primary rounded submit px-3 ">REGISTER</button>
+                <button type="submit" class="form-control btn btn-primary rounded submit px-3" data-th-text="#{label.register}"></button>
               </div>
             </form>
-            <p class="text-center">Have an account already? <a th:href="@{/login}">Login</a></p>
+            <p class="text-center" > 
+				<a data-th-text="#{label.have-account}"></a>
+				<a th:href="@{/login}" data-th-text="#{label.sign}"></a>
+			</p>
           </div>
         </div>
       </div>

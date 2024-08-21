@@ -4,16 +4,17 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 import java.util.List;
+import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,7 +26,8 @@ import com.ecommerce.cozashop.model.UpdateUser;
 import com.ecommerce.cozashop.model.User;
 import com.ecommerce.cozashop.service.CartItemService;
 import com.ecommerce.cozashop.service.CookieService;
-import com.ecommerce.cozashop.service.EmailService;
+import com.ecommerce.cozashop.service.PasswordService;
+import com.ecommerce.cozashop.service.PasswordTokenService;
 import com.ecommerce.cozashop.service.UserService;
 
 import jakarta.servlet.http.Cookie;
@@ -46,18 +48,11 @@ public class UserController {
 	private CookieService cookieService;
 
 	@Autowired
-	private HttpServletRequest request;
-
-	@Autowired
 	private CartItemService cartItemService;
 
-	@Autowired
-	EmailService  emailService;
 
 	@Autowired
-	private BCryptPasswordEncoder encoder;
-
-
+	private MessageSource messageSource;
 
 	@GetMapping("/login")
 	public String showLogin(Model model) {
@@ -92,6 +87,7 @@ public class UserController {
 		return "account/login";
 	}
 
+
 	@GetMapping("/logout")
 	public String logoutAccount (){
 		session.removeAttribute("user");
@@ -106,7 +102,7 @@ public class UserController {
 	@PostMapping("/register-new")
 	public String registerAccount(@ModelAttribute User user,
 			Model model) {
-
+		Locale locale = LocaleContextHolder.getLocale();
 		try {
 			if (userService.checkEmailAlreadyExists(user.getEmail())) {
 				model.addAttribute("error", "Email address already exists");
@@ -116,33 +112,22 @@ public class UserController {
 				return "account/register";
 			} else {
 				userService.registerAccount(user);
-				return "redirect:account/login";
+				String info = messageSource.getMessage("label.info-create-account",null, locale);
+				model.addAttribute("info", info);
+				return "account/login";
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			model.addAttribute("error", "Error 500");
+				//TODO logging
+			String info = messageSource.getMessage("label.error-create-account",null, locale);
+			model.addAttribute("error", info);
+			return "account/register";
 		}
-		return "acount/register";
 	}
 
 
-	@GetMapping("/forgot-password")
-	public String showForgotPassword() {
-
-		return "account/forgot-password";
-	}
 
 
-	@PostMapping("/reset-password")
-	public String resetPassword(@ModelAttribute User user) {
-		String userName = user.getEmail();
-		if(userService.checkEmailAlreadyExists(userName)){
-			emailService.sendSimpleMessage(userName, "reset PAssword"," initi");
-		}
-		return "account/forgot-password";
-	}
 
-	
 	@GetMapping("/my-account")
 	public String showAccount(Model model) {
 		Authentication authentification = SecurityContextHolder.getContext().getAuthentication();
@@ -169,24 +154,6 @@ public class UserController {
 	}
 
 
-	@PostMapping("/update-password")
-	public String updatePasswordUser(@ModelAttribute User userUpdate, Model model) {
-		Authentication authentification = SecurityContextHolder.getContext().getAuthentication();
-		if(nonNull(authentification) && !( authentification instanceof AnonymousAuthenticationToken)) {
-			User user = (User) authentification.getPrincipal();
-			if(encoder.matches(userUpdate.getOldpassword(), user.getPassword())) {
-				userService.updatePassword(userUpdate.getPassword(), user.getEmail());
-				HttpSession session = request.getSession();
-				session.invalidate();
-				SecurityContextHolder.clearContext();
-				return "redirect:/";
-			}else {
-				model.addAttribute("error","old password not valid");
-				return "account/update-password";
-			}
-		}
-		return "redirect:/";
-	}
 
 	@PostMapping("/update-user")
 	public String postUser(@ModelAttribute UpdateUser updateuser) {
