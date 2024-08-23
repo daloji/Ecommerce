@@ -21,7 +21,7 @@ public class WebSecurityConfig {
 
 	private String[] authorizedURL = {"/","/index","/blog" ,"/blog-detail","/home","/login", "/product","/product-detail/*",
 			                         "/error", "/register","/forgot-password","/register-new",
-			                         "/add-to-cart/*/*", "/reset/password/*", "/update-password","/logout"};
+			                         "/add-to-cart/*/*","/confirm-account/*","/reset/password/*", "/update-password","/logout"};
 	
     @Autowired
     private UserService userService;

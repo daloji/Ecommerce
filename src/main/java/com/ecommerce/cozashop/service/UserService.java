@@ -1,7 +1,10 @@
 package com.ecommerce.cozashop.service;
 
-import java.util.List;
 import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,6 +34,8 @@ public class UserService implements UserDetailsService {
 		if(user == null) {
 			throw new UsernameNotFoundException("user not found");
 		}
+		if(!user.isEnabled()) {
+		}
 		return user;
 	}
 
@@ -49,9 +54,22 @@ public class UserService implements UserDetailsService {
 	public User getUserByEmail(String email) {
 		return userRepo.findByEmail(email);
 	}
+	
+	public void updateUser(User user) {
+		 userRepo.save(user);
+	}
 
 	public Long getIdUserByEmail(String email) {
 		return userRepo.findIdByEmail(email);
+	}
+
+	public User getUserById(Long id) {
+		User user = null;
+		Optional<User> optusr = userRepo.findById(id);
+		if(optusr.isPresent()) {
+			user = optusr.get();
+		}
+		return user;
 	}
 
 	public void registerAccount(User user) {
@@ -64,8 +82,7 @@ public class UserService implements UserDetailsService {
 		user.setAccountNonExpired(true);
 		user.setAccountNonLocked(true);
 		user.setCredentialsNonExpired(true);
-		user.setEnabled(true);
-
+		user.setEnabled(false);
 		userRepo.save(user);
 	}
 
@@ -90,7 +107,12 @@ public class UserService implements UserDetailsService {
 	}
 
 	public boolean checkPhoneAlreadyExists(String phone) {
-		return userRepo.findByPhone(phone) == null ? true : false;
+		User user = userRepo.findByPhone(phone);
+		boolean present = false;
+		if(nonNull(user)) {
+			present = true;
+		}
+		return present;
 	}
 
 }

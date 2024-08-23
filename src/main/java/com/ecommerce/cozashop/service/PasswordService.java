@@ -24,19 +24,18 @@ public class PasswordService {
 	private EmailService  emailService;
 
 	@Autowired
-	private PasswordTokenRepo passwordToken;
+	private PasswordTokenRepo passwordTokenRepo;
 	
 	
 	public PasswordResetToken getUserToken(String token) {
-		return passwordToken.findByToken(token);
+		return passwordTokenRepo.findByToken(token);
 	}
 	
-
 	
 	public void resetPassword(String username, String token) {
 		try {
 			Locale locale = LocaleContextHolder.getLocale();
-			File file =  ResourceUtils.getFile("classpath:file/email.html");
+			File file =  ResourceUtils.getFile("classpath:file/reset-password-email.html");
 			String preheader = messageSource.getMessage("label.init-preheader",null, locale);
 			String content = new String(Files.readAllBytes(file.toPath()));
 			String subject = messageSource.getMessage("label.init-password",null, locale);
@@ -45,11 +44,18 @@ public class PasswordService {
 			String info1 = messageSource.getMessage("label.init-password-mail-1",null, locale);
 			info1 = MessageFormat.format(info1,username);
 			String info2 = messageSource.getMessage("label.init-password-mail-2",null, locale);
+			String button = messageSource.getMessage("label.button-reset-password",null, locale);
+			String grettings = messageSource.getMessage("label.regards",null, locale);
 
-			content = MessageFormat.format(content,contentCss,preheader,messageSource.getMessage("label.hello",null, locale),info1,token,info2);
+			content = MessageFormat.format(content,contentCss,preheader,messageSource.getMessage("label.hello",null, locale),info1,token,button,info2,grettings);
 			emailService.sendSimpleMessage(username,subject,content); 
 		}catch (Exception e) {
 			//TODO logging
 		}
+	}
+	
+	
+	public void deletePasswordToken(PasswordResetToken passwordToken) {
+		passwordTokenRepo.delete(passwordToken);
 	}
 }

@@ -3,6 +3,9 @@ package com.ecommerce.cozashop.controller;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Locale;
 
@@ -12,11 +15,12 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -26,12 +30,10 @@ import com.ecommerce.cozashop.model.UpdateUser;
 import com.ecommerce.cozashop.model.User;
 import com.ecommerce.cozashop.service.CartItemService;
 import com.ecommerce.cozashop.service.CookieService;
-import com.ecommerce.cozashop.service.PasswordService;
-import com.ecommerce.cozashop.service.PasswordTokenService;
+import com.ecommerce.cozashop.service.EmailService;
 import com.ecommerce.cozashop.service.UserService;
 
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -50,10 +52,42 @@ public class UserController {
 	@Autowired
 	private CartItemService cartItemService;
 
+	@Autowired
+	private EmailService  emailService;
 
 	@Autowired
 	private MessageSource messageSource;
 
+	
+	@GetMapping("/confirm-account/{email}")
+	public String confirm_account(@PathVariable("email") String email)  {
+	
+		try {
+			User user = userService.getUserByEmail(email);
+			if(!user.isEnabled()) {
+				user.setEnabled(true);
+				userService.updateAccount(user);
+				Locale locale = user.getLocal();
+				File file =  ResourceUtils.getFile("classpath:file/welcome-email.html");
+				String preheader = messageSource.getMessage("label.init-preheader-welcome",null, locale);
+				String content = new String(Files.readAllBytes(file.toPath()));
+				String subject = messageSource.getMessage("label.init-welcome-account",null, locale);
+				File fileCss = ResourceUtils.getFile("classpath:file/info.css");
+				String contentCss = new String(Files.readAllBytes(fileCss.toPath()));
+				String info1 = messageSource.getMessage("label.welcome-account-mail-1",null, locale);
+				String hello = messageSource.getMessage("label.hello",null, locale);
+				String bouton = messageSource.getMessage("label.sign-in",null, locale);
+				String gretting = messageSource.getMessage("label.regards",null, locale);
+				content = MessageFormat.format(content,contentCss,preheader,hello,info1,bouton,gretting);
+				emailService.sendSimpleMessage(user.getEmail(),subject,content); 	
+			}
+		} catch (Exception e) {
+			// TODO Logging
+			e.printStackTrace();
+		}
+		return "redirect:/";
+	}
+	
 	@GetMapping("/login")
 	public String showLogin(Model model) {
 
@@ -105,19 +139,35 @@ public class UserController {
 		Locale locale = LocaleContextHolder.getLocale();
 		try {
 			if (userService.checkEmailAlreadyExists(user.getEmail())) {
-				model.addAttribute("error", "Email address already exists");
+				String info = messageSource.getMessage("label.email-already-exist",null, locale);
+				model.addAttribute("error", info);
 				return "account/register";
-			} else if (!userService.checkPhoneAlreadyExists(user.getPhone())) {
+			} else if (userService.checkPhoneAlreadyExists(user.getPhone())) {
 				model.addAttribute("error", "Phone number address already exists");
 				return "account/register";
 			} else {
+				user.setLocal(locale);
 				userService.registerAccount(user);
+				File file =  ResourceUtils.getFile("classpath:file/create-account-email.html");
+				String preheader = messageSource.getMessage("label.init-preheader-account",null, locale);
+				String content = new String(Files.readAllBytes(file.toPath()));
+				String subject = messageSource.getMessage("label.init-create-account",null, locale);
+				File fileCss = ResourceUtils.getFile("classpath:file/info.css");
+				String contentCss = new String(Files.readAllBytes(fileCss.toPath()));
+				String info1 = messageSource.getMessage("label.create-account-mail-1",null, locale);
+				String info2 = messageSource.getMessage("label.create-account-mail-2",null, locale);
+				String mailboutton = messageSource.getMessage("label.create-account-mail-confirm",null, locale);
+				String greeting = messageSource.getMessage("label.hello",null, locale);
+				String regards = messageSource.getMessage("label.regards",null, locale);
+				content = MessageFormat.format(content,contentCss,preheader,greeting,info1,user.getEmail(),mailboutton,info2,regards);
+
+				emailService.sendSimpleMessage(user.getEmail(),subject,content); 
 				String info = messageSource.getMessage("label.info-create-account",null, locale);
 				model.addAttribute("info", info);
 				return "account/login";
 			}
 		} catch (Exception e) {
-				//TODO logging
+			//TODO logging
 			String info = messageSource.getMessage("label.error-create-account",null, locale);
 			model.addAttribute("error", info);
 			return "account/register";

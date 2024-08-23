@@ -4,6 +4,7 @@ import java.util.UUID;
 import static java.util.Objects.nonNull;
 import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.ecommerce.cozashop.model.PasswordResetToken;
@@ -15,6 +16,9 @@ public class PasswordTokenService {
 	
 	@Autowired
 	private PasswordTokenRepo passwordTokenRepo;
+	
+	@Value("${token.expire}")
+	private String expire;
 
 	public String updatePasswordToken(User user) {
 		String token = UUID.randomUUID().toString();
@@ -27,11 +31,18 @@ public class PasswordTokenService {
 		}
 		passworToken.setToken(token);
 	    passworToken.setUser(user);	
-		LocalDateTime currentDateTimeFromJavaDate =  LocalDateTime.now();
-		currentDateTimeFromJavaDate.plusHours(8);
-		passworToken.setExpiryDate(currentDateTimeFromJavaDate.toDate());
+		LocalDateTime currentDateTime =  LocalDateTime.now();
+		int expireTime = Integer.valueOf(expire);
+		currentDateTime = currentDateTime.plusMinutes(expireTime);
+		passworToken.setExpiryDate(currentDateTime.toDate());
 		passwordTokenRepo.save(passworToken);
 		return token;
 
 	}
+	
+	
+	public void deleteToken(PasswordResetToken passwordToken) {
+		passwordTokenRepo.delete(passwordToken);	
+	}
+
 }

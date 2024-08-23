@@ -2,6 +2,7 @@ package com.ecommerce.cozashop.model;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -98,6 +99,9 @@ public class User implements UserDetails {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private List<CartItem> cartItems;
+    
+    @NonNull
+    private Locale local;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
