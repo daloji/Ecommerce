@@ -192,7 +192,7 @@
 
 								<div class="size-204 respon6-next">
 									<div class="rs1-select2 bor8 bg0">
-										<select class="js-select2" name="size">
+										<select class="js-select2" id="select-size" name="size">
 											<option th:each="size : ${size_opt}" th:text="*{size}"></option>
 										</select>
 										<div class="dropDownSelect2"></div>
@@ -526,14 +526,15 @@
 			var nameProduct = $(this).parent().parent().parent().parent().find('.js-name-detail').html();
 			$(this).on('click', function(){
 			   	var prodId = $(this).closest(".product-item-detail").attr("data-id");
+				var size = $('#select-size').find(":selected").text();
 				var qty = document.getElementById('qty');
 				$.get({
-					url: `/add-to-cart/${prodId}/${qty.value}`,
+					url: `/add-to-cart/${prodId}/${qty.value}/${size}`,
 					success: function (data) {
 						$('.count-cart').attr("data-notify", data);
 					}
 				})
-					swal(nameProduct, "is added to 11cart !", "success");
+					swal(nameProduct, "is added to cart !", "success");
 
 			
 			});

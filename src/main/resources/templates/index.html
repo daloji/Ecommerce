@@ -59,12 +59,10 @@
 					</a>
 					<a sec:authorize="isAuthenticated()" th:href="@{/my-account}" data-th-text="#{label.my-account}" class="flex-c-m trans-04 p-lr-25">
 					</a>
-					<a sec:authorize="isAuthenticated()" th:href="@{/update-password}" class="flex-c-m trans-04 p-lr-25">
-						Update Password
+				<a sec:authorize="isAuthenticated()" th:href="@{/update-password}" class="flex-c-m trans-04 p-lr-25" data-th-text="#{label.update-password-header}">
 					 </a>
-					<a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="flex-c-m trans-04 p-lr-25">
-						Log out
-					</a>
+					 <a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="flex-c-m trans-04 p-lr-25" data-th-text="#{label.logout}">
+					 </a>
 	
 				</div>
 			</div>
@@ -173,14 +171,12 @@
 				<div class="container h-full">
 					<div class="flex-col-l-m h-full p-t-100 p-b-30 respon5">
 						<div class="layer-slick1 animated visible-false" data-appear="fadeInDown" data-delay="0">
-								<span class="ltext-101 cl2 respon2">
-									Collection 2023
+								<span class="ltext-101 cl2 respon2" data-th-text="#{label.collection}"> 
 								</span>
 						</div>
 
 						<div class="layer-slick1 animated visible-false" data-appear="fadeInUp" data-delay="800">
-							<h2 class="ltext-201 cl2 p-t-19 p-b-43 respon1">
-								NEW SEASON
+							<h2 class="ltext-201 cl2 p-t-19 p-b-43 respon1" data-th-text="#{label.new-season}"> 
 							</h2>
 						</div>
 
@@ -197,8 +193,7 @@
 				<div class="container h-full">
 					<div class="flex-col-l-m h-full p-t-100 p-b-30 respon5">
 						<div class="layer-slick1 animated visible-false" data-appear="rollIn" data-delay="0">
-								<span class="ltext-101 cl2 respon2">
-									New-Season
+								<span class="ltext-101 cl2 respon2" data-th-text="#{label.new-season}">
 								</span>
 						</div>
 
@@ -320,8 +315,7 @@
 				<div class="block2">
 					<div class="block2-pic hov-img0">
 						<img th:src="@{*{prod.product_img}}" alt="IMG-PRODUCT">
-						<a th:href="@{/product-detail/{id}(id = *{prod.id})}" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04">
-							Show Detail
+						<a th:href="@{/product-detail/{id}(id = *{prod.id})}" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04" data-th-text="#{label.show-detail}">
 						</a>
 					</div>
 					<div class="block2-txt flex-w flex-t p-t-14">
@@ -345,8 +339,7 @@
 				<div class="block2">
 					<div class="block2-pic hov-img0">
 						<img th:src="@{*{prod.product_img}}" alt="IMG-PRODUCT">
-						<a th:href="@{/product-detail/{id}(id = *{prod.id})}" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04">
-							Show Detail
+						<a th:href="@{/product-detail/{id}(id = *{prod.id})}" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04" data-th-text="#{label.show-detail}">
 						</a>
 					</div>
 					<div class="block2-txt flex-w flex-t p-t-14">
@@ -370,8 +363,8 @@
 				<div class="block2">
 					<div class="block2-pic hov-img0">
 						<img th:src="@{*{prod.product_img}}" alt="IMG-PRODUCT">
-						<a th:href="@{/product-detail/{id}(id = *{prod.id})}" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04">
-							Show Detail
+						<a th:href="@{/product-detail/{id}(id = *{prod.id})}" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04" data-th-text="#{label.show-detail}">
+					
 						</a>
 					</div>
 					<div class="block2-txt flex-w flex-t p-t-14">
@@ -395,8 +388,7 @@
 				<div class="block2">
 					<div class="block2-pic hov-img0">
 						<img th:src="@{*{prod.product_img}}" alt="IMG-PRODUCT">
-						<a th:href="@{/product-detail/{id}(id = *{prod.id})}" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04">
-							Show Detail
+						<a th:href="@{/product-detail/{id}(id = *{prod.id})}" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04" data-th-text="#{label.show-detail}">
 						</a>
 					</div>
 					<div class="block2-txt flex-w flex-t p-t-14">

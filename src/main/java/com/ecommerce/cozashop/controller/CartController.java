@@ -73,10 +73,10 @@ public class CartController {
 	}
 	
 
-	@GetMapping("/add-to-cart/{id}/{qty}")
+	@GetMapping("/add-to-cart/{id}/{qty}/{size}")
 	@ResponseBody
 	public Integer addToCart(@PathVariable(name = "id") Long id,
-			@PathVariable(name = "qty") Integer qty) {
+			@PathVariable(name = "qty") Integer qty,@PathVariable(name = "size") String size) {
 		
 		//check if user is authenticated
 		Authentication authetication = SecurityContextHolder.getContext().getAuthentication();

@@ -25,7 +25,7 @@ public class EmailService {
  
 
     	 final String username = "admin@iantila.com";
-         final String password = "Madagascar2025!";
+         final String password = "Madagascar2024!";
 
          Properties prop = new Properties();
  		prop.put("mail.smtp.host", "smtp.ionos.fr");

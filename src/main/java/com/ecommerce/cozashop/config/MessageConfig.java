@@ -21,7 +21,7 @@ public class MessageConfig implements WebMvcConfigurer{
 	    	ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
 	        messageSource.setBasenames("lang/messages");
 	        messageSource.setDefaultEncoding("UTF-8");
-	        messageSource.setDefaultLocale(Locale.ENGLISH);
+	        messageSource.setDefaultLocale(Locale.FRENCH);
 	        return messageSource;
 	    }
 	    
@@ -29,7 +29,7 @@ public class MessageConfig implements WebMvcConfigurer{
 	    @Bean
 	    public LocaleResolver localeResolver() {
 	        SessionLocaleResolver sessionLocaleResolver=new SessionLocaleResolver();
-	        sessionLocaleResolver.setDefaultLocale(Locale.ENGLISH);
+	        sessionLocaleResolver.setDefaultLocale(Locale.FRENCH);
 	        return sessionLocaleResolver;
 	    }
 	    

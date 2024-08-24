@@ -44,19 +44,21 @@
 			<!-- Topbar -->
 			<div class="top-bar">
 				<div class="content-topbar flex-sb-m h-full container">
-					<div class="left-top-bar">
-						Free shipping for standard order over $120
+					<div class="left-top-bar" th:text="#{label.alert-info}">
 					</div>
 
 					<div class="right-top-bar flex-w h-full">
-						<a sec:authorize="isAnonymous()" th:href="@{/login}" class="flex-c-m trans-04 p-lr-25">
-							Sign in
+						<a th:href="@{/?lang=en}" class="flex-c-m trans-04 p-lr-25">
+							EN
 						</a>
-						<a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="flex-c-m trans-04 p-lr-25">
-							My account
+						<a th:href="@{/?lang=fr}" class="flex-c-m trans-04 p-lr-25">
+							FR
 						</a>
-						<a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="flex-c-m trans-04 p-lr-25">
-							Log out
+						<a sec:authorize="isAnonymous()" th:href="@{/login}" class="flex-c-m trans-04 p-lr-25" data-th-text="#{label.sign}">
+						</a>
+						<a sec:authorize="isAuthenticated()" th:href="@{/logout}" data-th-text="#{label.my-account}" class="flex-c-m trans-04 p-lr-25">
+						</a>
+						<a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="flex-c-m trans-04 p-lr-25" data-th-text="#{label.logout}">
 						</a>
 				  </div>
 					
@@ -150,10 +152,10 @@
 						<div class="wrap-table-shopping-cart">
 							<table class="table-shopping-cart">
 								<tr class="table_head">
-									<th class="column-1">Product</th>
+									<th class="column-1" data-th-text="#{label.product}"></th>
 									<th class="column-2"></th>
-									<th class="column-3">Quantity</th>
-									<th class="column-4">Price</th>
+									<th class="column-3" data-th-text="#{label.quantity}"></th> 
+									<th class="column-4" data-th-text="#{label.price}"></th>
 									<th class="column-5">Total</th>
 									<th class="column-6"></th>
 								</tr>
@@ -206,14 +208,12 @@
 				</div>
 				<div class="col-sm-10 col-lg-7 col-xl-5 m-lr-auto m-b-50">
 					<div class="bor10 p-lr-40 p-t-20 p-b-40 m-l-63 m-r-40 m-lr-0-xl p-lr-15-sm">
-						<h4 class="mtext-109 cl2 p-b-30">
-							Cart Totals
+						<h4 class="mtext-109 cl2 p-b-30" data-th-text="#{label.cart-total}" >
 						</h4>
 
 						<div class="flex-w flex-t bor12 p-b-13">
 							<div class="size-208">
-								<span class="stext-110 cl2">
-									Subtotal:
+								<span class="stext-110 cl2" data-th-text="#{label.subtotal}"> 
 								</span>
 							</div>
 
@@ -226,8 +226,8 @@
 
 						</div>
 
-						<a th:href="@{/check-out}" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer checkout">
-							Payment
+						<a th:href="@{/check-out}" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer checkout" data-th-text="#{label.payment}">
+						
 						</a>
 					</div>
 				</div>

@@ -9,6 +9,8 @@ import java.text.MessageFormat;
 import java.util.List;
 import java.util.Locale;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -39,6 +41,7 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 public class UserController {
 
+    private static Logger logger = LoggerFactory.getLogger(UserController.class);
 
 	@Autowired
 	private UserService userService;
@@ -61,11 +64,12 @@ public class UserController {
 	
 	@GetMapping("/confirm-account/{email}")
 	public String confirm_account(@PathVariable("email") String email)  {
-	
+		logger.info("account confirmation  /confirm-account/{}",email);
 		try {
 			User user = userService.getUserByEmail(email);
 			if(!user.isEnabled()) {
 				user.setEnabled(true);
+				logger.info("user account confirmation {} is enabled",email);
 				userService.updateAccount(user);
 				Locale locale = user.getLocal();
 				File file =  ResourceUtils.getFile("classpath:file/welcome-email.html");
@@ -79,11 +83,11 @@ public class UserController {
 				String bouton = messageSource.getMessage("label.sign-in",null, locale);
 				String gretting = messageSource.getMessage("label.regards",null, locale);
 				content = MessageFormat.format(content,contentCss,preheader,hello,info1,bouton,gretting);
+				logger.info("send e-mail welcome for user account {} ",email);
 				emailService.sendSimpleMessage(user.getEmail(),subject,content); 	
 			}
 		} catch (Exception e) {
-			// TODO Logging
-			e.printStackTrace();
+			logger.error("error confirmation account for id {} => {}",email,e.getMessage() );
 		}
 		return "redirect:/";
 	}
@@ -137,10 +141,12 @@ public class UserController {
 	public String registerAccount(@ModelAttribute User user,
 			Model model) {
 		Locale locale = LocaleContextHolder.getLocale();
+		logger.info("register new account email:{} local:{}",user.getEmail(),locale);
 		try {
 			if (userService.checkEmailAlreadyExists(user.getEmail())) {
 				String info = messageSource.getMessage("label.email-already-exist",null, locale);
 				model.addAttribute("error", info);
+				logger.error("user account creation error => {} ",info);
 				return "account/register";
 			} else if (userService.checkPhoneAlreadyExists(user.getPhone())) {
 				model.addAttribute("error", "Phone number address already exists");
@@ -167,9 +173,9 @@ public class UserController {
 				return "account/login";
 			}
 		} catch (Exception e) {
-			//TODO logging
 			String info = messageSource.getMessage("label.error-create-account",null, locale);
 			model.addAttribute("error", info);
+			logger.error("user account creation error => {} : {}",info,e.getMessage());
 			return "account/register";
 		}
 	}
@@ -202,7 +208,6 @@ public class UserController {
 			return "index";	
 		}
 	}
-
 
 
 	@PostMapping("/update-user")
