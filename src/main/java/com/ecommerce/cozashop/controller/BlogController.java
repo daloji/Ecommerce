@@ -12,4 +12,9 @@ public class BlogController {
 		return  "blog-detail";
 	}
 	
+	@GetMapping("/blog")
+	public String showBlog(Model model) {
+		return  "blog";
+	}
+	
 }

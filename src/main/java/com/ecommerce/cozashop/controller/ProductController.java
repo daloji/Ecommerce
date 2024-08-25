@@ -46,6 +46,11 @@ public class ProductController {
     }
     
     
+    @GetMapping("/product/{search}")
+    public String searchProduct(@PathVariable(name = "search") String search, Model model) {
+      
+        return "product";
+    }
     
 
     @GetMapping("/product-detail/{id}")
