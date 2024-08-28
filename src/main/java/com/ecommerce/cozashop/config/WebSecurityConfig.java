@@ -21,7 +21,9 @@ public class WebSecurityConfig {
 
 	private String[] authorizedURL = {"/","/index","/blog" ,"/blog-detail","/home","/login", "/product","/product-detail/*",
 			                         "/error", "/register","/forgot-password","/register-new",
-			                         "/add-to-cart/*/*","/confirm-account/*","/reset/password/*", "/update-password","/logout"};
+			                         "/add-to-cart/*/*","/confirm-account/*","/reset/password/*", "/update-password","/logout",
+			                         "/admin","/admin/sales-report","/admin/category","/admin/add-category",
+			                         "/admin/product","/admin/edit-category/*","/admin/add-product","/admin/delete-category/*"};
 	
     @Autowired
     private UserService userService;
@@ -35,7 +37,7 @@ public class WebSecurityConfig {
 		http
 		.authorizeHttpRequests(authConfig -> {
 			authConfig.requestMatchers(HttpMethod.GET, authorizedURL).permitAll();
-			authConfig.requestMatchers(HttpMethod.POST, "/reset/new-password","/register-new","/reset-password","/update-user").permitAll();
+			authConfig.requestMatchers(HttpMethod.POST, "/admin/create-product","/admin/create-category","/admin/login","/reset/new-password","/register-new","/reset-password","/update-user").permitAll();
 			authConfig.anyRequest().authenticated();
 			/*authConfig.requestMatchers(HttpMethod.GET, "/user").hasRole("USER");
 			authConfig.requestMatchers(HttpMethod.GET, "/admin").hasRole("ADMIN");

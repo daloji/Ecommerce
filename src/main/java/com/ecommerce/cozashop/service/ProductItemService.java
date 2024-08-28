@@ -24,4 +24,8 @@ public class ProductItemService {
     public ProductItem getProductById(Long id) {
         return productItemRepo.findProductById(id);
     }
+    
+    public void save(ProductItem productItem) {
+    	productItemRepo.save(productItem);
+    }
 }
