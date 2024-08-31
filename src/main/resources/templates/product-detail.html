@@ -528,13 +528,24 @@
 			   	var prodId = $(this).closest(".product-item-detail").attr("data-id");
 				var size = $('#select-size').find(":selected").text();
 				var qty = document.getElementById('qty');
-				$.get({
-					url: `/add-to-cart/${prodId}/${qty.value}/${size}`,
-					success: function (data) {
-						$('.count-cart').attr("data-notify", data);
-					}
-				})
-					swal(nameProduct, "is added to cart !", "success");
+				var url = '/add-to-cart/${prodId}/${qty.value}'
+				if(size){
+					$.get({
+					      url: `/add-to-cart/${prodId}/${qty.value}/${size}`,
+						  success: function (data) {
+								$('.count-cart').attr("data-notify", data);
+							}
+						})
+				}else{
+					$.get({
+						url: `/add-to-cart/${prodId}/${qty.value}`,
+						success: function (data) {
+								$('.count-cart').attr("data-notify", data);
+						}
+					})
+				}
+			
+					swal(nameProduct,"is added to cart !", "success");
 
 			
 			});

@@ -23,9 +23,11 @@ public class UserService implements UserDetailsService {
 	@Autowired
 	private UserRepo userRepo;
 
-
 	@Autowired
 	private BCryptPasswordEncoder encoder;
+	
+	@Autowired
+	private RoleService roleService;
 
 
 	@Override
@@ -73,10 +75,8 @@ public class UserService implements UserDetailsService {
 	}
 
 	public void registerAccount(User user) {
-		Role role = new Role();
-
+		Role role = roleService.getRolebyName("USER");;
 		String encodeStr = encoder.encode(user.getPassword());
-		role.setId(1);
 		user.setPassword(encodeStr);
 		user.setRole(role);
 		user.setAccountNonExpired(true);

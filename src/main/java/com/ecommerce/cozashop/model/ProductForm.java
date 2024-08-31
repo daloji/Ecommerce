@@ -1,9 +1,10 @@
 package com.ecommerce.cozashop.model;
 
+import java.util.List;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 @Data
@@ -14,5 +15,7 @@ public class ProductForm {
 	
 	private String category;
 	
-	private MultipartFile file;
+	private List<MultipartFile> file;
+	
+	private MultipartFile filePrincipal;
 }

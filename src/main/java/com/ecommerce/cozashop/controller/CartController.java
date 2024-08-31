@@ -76,7 +76,7 @@ public class CartController {
 	@GetMapping("/add-to-cart/{id}/{qty}/{size}")
 	@ResponseBody
 	public Integer addToCart(@PathVariable(name = "id") Long id,
-			@PathVariable(name = "qty") Integer qty,@PathVariable(name = "size") String size) {
+			@PathVariable(name = "qty") Integer qty,@PathVariable(name = "size",required = false) String size) {
 		
 		//check if user is authenticated
 		Authentication authetication = SecurityContextHolder.getContext().getAuthentication();
@@ -113,6 +113,45 @@ public class CartController {
 			
 		}
 		
+	}
+	
+	@GetMapping("/add-to-cart/{id}/{qty}")
+	@ResponseBody
+	public Integer addToCartnoSize(@PathVariable(name = "id") Long id,
+			@PathVariable(name = "qty") Integer qty) {
+		Authentication authetication = SecurityContextHolder.getContext().getAuthentication();
+		if(nonNull(authetication) && !( authetication instanceof AnonymousAuthenticationToken)) {
+			User user = (User) authetication.getPrincipal();
+			List<CartItem> list = cartItemService.getAllProductCartWithUser(user.getId());
+			if (cartItemService.checkProductAlreadyExists(id)) {
+				CartItem item = cartItemService.getOneCartByProduct(id);
+				item.setQty(item.getQty() + qty);
+				cartItemService.addToCart(item);
+				return list.size();
+			}
+			ProductItem product = new ProductItem();
+			CartItem cartItem = new CartItem();
+			product.setId(id);
+			cartItem.setQty(qty);
+			cartItem.setItem(product);
+			cartItem.setUser(user);
+			cartItemService.addToCart(cartItem);
+			list = cartItemService.getAllProductCartWithUser(user.getId());
+			session.removeAttribute("totalCart");
+			session.setAttribute("totalCart", list.size());
+			return list.size();
+			
+		}else {
+			ProductItem product = new ProductItem();
+			CartItem cartItem = new CartItem();
+			product.setId(id);
+			cartItem.setQty(qty);
+			cartItem.setItem(product);
+			session.removeAttribute("totalCart");
+			session.setAttribute("totalCart", 1);
+			return 1;	
+			
+		}
 	}
 
 	@RequestMapping( value = "/remove-cart-item/{cid}", produces = "application/json")

@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html
   lang="en"
   class="light-style layout-menu-fixed"
@@ -30,21 +29,23 @@
     />
 
     <!-- Icons. Uncomment required icon fonts -->
-	<link rel="stylesheet" type="text/css" th:href="@{/vendor/fonts/boxicons.css}" />
-	 
-	 <link rel="stylesheet" type="text/css" th:href="@{/vendor/css/core.css}" class="template-customizer-core-css" />
+   <link rel="stylesheet" type="text/css" th:href="@{/vendor/fonts/boxicons.css}" />
+
+    <!-- Core CSS -->
+	<link rel="stylesheet" type="text/css" th:href="@{/vendor/css/core.css}" class="template-customizer-core-css" />
 	 
 	 <link rel="stylesheet" type="text/css" th:href="@{/vendor/css/theme-default.css}" class="template-customizer-theme-css" />
 	 <!-- Core CSS -->
 	 <link rel="stylesheet" type="text/css" th:href="@{/css/demo.css}">
 
-	 <!-- Vendors CSS -->
-	 	<link rel="stylesheet" type="text/css" th:href="@{/vendor/libs/perfect-scrollbar/perfect-scrollbar.css}">
+    <!-- Vendors CSS -->
+	<!-- Vendors CSS -->
+	<link rel="stylesheet" type="text/css" th:href="@{/vendor/libs/perfect-scrollbar/perfect-scrollbar.css}">
 
-	 	<link rel="stylesheet" type="text/css" th:href="@{/vendor/libs/apex-charts/apex-charts.css}" />
+	<link rel="stylesheet" type="text/css" th:href="@{/vendor/libs/apex-charts/apex-charts.css}" />
 
-	 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-	 	 <!-- Page CSS -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Page CSS -->
 
     <style>
       #loading-spinner {
@@ -67,12 +68,12 @@
 }
     </style>
     
+
 	<script th:src="@{/vendor/js/helpers.js}"></script>
-	  <script th:src="@{/js/config.js}"></script>
+	<script th:src="@{/js/config.js}"></script>
  </head>
  
-
-   <body>
+ <body>
      <div id="loading-spinner"></div>
      <!-- Layout wrapper -->
      <div class="layout-wrapper layout-content-navbar" id="content" style="display: none;">
@@ -126,7 +127,7 @@
 
              <!-- Product -->
              
-                 <li class="menu-item active">
+                 <li class="menu-item">
                      <a href="/admin/product" class="menu-link">
                        <i class="menu-icon tf-icons bx bx-collection"></i>
                        <div data-i18n="Analytics">Product</div>
@@ -136,7 +137,7 @@
 
              <!-- Category -->
              
-                 <li class="menu-item">
+                 <li class="menu-item active">
                      <a href="/admin/category" class="menu-link">
                        <i class="menu-icon tf-icons bx bx-collection"></i>
                        <div data-i18n="Analytics">Category</div>
@@ -200,111 +201,35 @@
 
  <div class="container-xxl flex-grow-1 container-p-y">
 
-   <!-- Search -->
-   <form action="/admin/product" id="search">
-     <div class="row d-flex">
-       <div class="col-md-11">
-         <input style="display: inline;" type="text" name="query" class="form-control" placeholder="Search product name...">
-       </div>
-       <button type="submit" class="btn btn-primary col-md-1">Search</button>
-     </div>
-   </form>
-   <!-- /Search -->
+   <div class="card mb-4">
+     <div class="card-body">
+       <form th:action="@{/admin/create-role}" th:object="${role}" method="post">
+		<input type="hidden" th:field="${role.id}"  />
 
-   <form action="/admin/product" id="search" style="margin-top: 15px;">
-     <div class="row d-flex">
-       <!-- Category filter dropdown -->
-       <div class="col-md-5">
-         <select name="category" class="form-select">
-           <option value="">All Categories</option>
-		   <option th:each="category : ${list_category}"
-		                      th:text="${category.getCategory_name()}"
-		                      th:value="${category.getId()}">
-         </select>
-       </div>
+         <div class="row mb-3">
+           <label class="col-sm-2 col-form-label" for="basic-default-name">Role name</label>
+           <div class="col-sm-10">
+             <input type="text" class="form-control" id="basic-default-name" th:field="${role.role_name}" placeholder="Enter category name" name="category_name" oninput="validateLetterField(this)" required />
+           </div>
+         </div>
 
-       <!-- Brand filter dropdown -->
-       <div class="col-md-5">
-         <select name="brand" class="form-select">
-           <option value="">All Brands</option>
+         <div class="row justify-content-end">
+           <div class="col-sm-10">
+             <button type="submit" class="btn btn-primary">Add Role</button>
+           </div>
+         </div>
+
+         <div style="margin-top: 5px; text-align: center; font-family: 'Poppins',sans-serif;">
            
-         </select>
-       </div>
-
-       <button type="submit" class="btn btn-primary col-lg-2">Filter</button>
-
-     </div>
-
-   </form>
-
-   <a th:href="@{/admin/add-product}"><button style="margin-top: 20px;" type="button" class="btn btn-primary btn-lg">Add product</button></a>
-
-   <!-- Basic Bootstrap Table -->
-   <div class="card" style="margin-top: 20px;">
-     <h5 class="card-header">Products</h5>
-     <div class="table-responsive text-nowrap">
-       <table class="table">
-         <thead>
-           <tr>
-             <th>Product image</th>
-             <th>Product Name</th>
-             <th>Brand</th>
-             <th>Category</th>
-             <th>Price</th>
-             <th>Stock</th>
-             <th>Actions</th>
-           </tr>
-         </thead>
-         <tbody class="table-border-bottom-0">
            
-           	<tr th:each="product : ${listProductItems}" class="table_row">
-				<td>
-				    <div class="row">
-				        <div class="col-4">
-				            <img th:src="${product.product_id.product_img}" alt="" class="img-click" style="width: 60px; height: 70px;">
-				         </div>
-				      </div>
-			     </td>
-				
-				<td th:text="${product.product_id.product_name}"></td>
-				<td th:text="${product.product_id.productCategory.category_name}"></td>
-				<td th:text="${product.product_id.productCategory.category_name}"></td>
-				<td th:text="${product.price}"></td>
-				<td th:text="${product.qty_in_stock}"></td>
-				<td>
-					<a class="dropdown-item" th:href="@{'/admin/edit-product/'+${product.getId()}}"><i class="bx bx-edit-alt me-2"></i> Edit</a>
-					<a class="dropdown-item" th:href="@{'/admin/delete-product/'+${product.getId()}}"><i class="bx bx-trash me-2"></i> Delete</a>
-			   </td>
-			</tr>
-           
-           <!-- Add more rows as needed -->
-         </tbody>
-		 
-		 
-		 <!--
-		 <tbody class="table-border-bottom-0">
-		 	<tr th:each="category : ${list_category}" class="table_row">
-		 		 <td th:text="${category.getId()}"></td>
-		 	     <td th:text="${category.getCategory_name()}"></td>
-		 		  <td th:text="${category.getId()}"></td>
-		           </tr>
-		 	</tr>
-		      </tbody>-->
-			  
-			  
-			  
-       </table>
+         </div>
+
+       </form>
      </div>
    </div>
-   <!--/ Basic Bootstrap Table -->
-   <!-- Display products here -->
 
-   <!-- Pagination controls -->
-   <div class="pagination" style="margin-top: 15px;">
+   <a class="btn btn-primary" href="/admin/category" role="button">Back to category</a>
 
-     
-
-   </div>
  </div>
  <!-- / Content -->
 
@@ -339,10 +264,18 @@
    <!-- Page JS -->
    <script th:src="@{/js/dashboards-analytics.js}"></script>
    
-   <!-- Place this tag in your head or just before your close body tag. -->
-   <script async defer src="https://buttons.github.io/buttons.js"></script>
-   
-  
+ <!-- Place this tag in your head or just before your close body tag. -->
+ <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+ <script>
+   function validateLetterField(input) {
+     // Remove spaces at the beginning
+     input.value = input.value.replace(/^\s+/g, '');
+
+     // Allow only letters and spaces
+     input.value = input.value.replace(/[^A-Za-z\s]/g, '');
+   }
+ </script>
  <script>
    document.addEventListener("DOMContentLoaded", function() {
      // Hide the loading spinner
@@ -355,4 +288,3 @@
  </body>
 
  </html>
-  

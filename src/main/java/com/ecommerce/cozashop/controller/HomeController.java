@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.ecommerce.cozashop.model.Banner;
 import com.ecommerce.cozashop.model.CartItem;
 import com.ecommerce.cozashop.model.Product;
 import com.ecommerce.cozashop.model.User;
+import com.ecommerce.cozashop.service.BannerService;
 import com.ecommerce.cozashop.service.CartItemService;
 import com.ecommerce.cozashop.service.ProductItemService;
 import com.ecommerce.cozashop.service.ProductService;
@@ -38,13 +40,18 @@ public class HomeController {
 
 	@Autowired
 	private CartItemService cartItemService;
+	
+	@Autowired
+	private BannerService bannerService;
 
 
 	@GetMapping("/home")
 	public String showHome(@RequestParam(required = false) String search,Model model) {
 		if(isNull(search)) {
+			List<Banner> listBanner = bannerService.findAllBanner();
 			model.addAttribute("product_list", productService.getAllProduct());
 			model.addAttribute("product_item_list", productItemService.getProductItems());
+			model.addAttribute("listBanner", listBanner);
 			return "index";
 		}else {
 			List<Product> listProduct = productService.getAllProductByName(search);
@@ -65,9 +72,11 @@ public class HomeController {
 	@GetMapping("/")
 	public String afterConnection(@RequestParam(required = false) String search,Model model) {
 		if(isNull(search)) {
+			List<Banner> listBanner = bannerService.findAllBanner();
 			model.addAttribute("product_list", productService.getAllProduct());
 			model.addAttribute("product_item_list", productItemService.getProductItems());
-
+			model.addAttribute("listBanner", listBanner);
+			
 			Authentication authentification = SecurityContextHolder.getContext().getAuthentication();
 			if(nonNull(authentification) && !( authentification instanceof AnonymousAuthenticationToken)) {
 				User user = (User) authentification.getPrincipal();

@@ -1,13 +1,13 @@
 package com.ecommerce.cozashop.service;
 
-import com.ecommerce.cozashop.model.CartItem;
-import com.ecommerce.cozashop.model.User;
-import com.ecommerce.cozashop.repository.CartItemRepo;
-import com.ecommerce.cozashop.repository.ProductItemRepo;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.ecommerce.cozashop.model.CartItem;
+import com.ecommerce.cozashop.model.User;
+import com.ecommerce.cozashop.repository.CartItemRepo;
 
 @Service
 public class CartItemService {

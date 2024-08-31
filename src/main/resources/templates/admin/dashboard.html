@@ -111,7 +111,14 @@
                       <div data-i18n="Analytics">Users</div>
                     </a>
                 </li>
-             
+				
+				
+				<li class="menu-item">
+				    <a th:href="@{/admin/roles}" class="menu-link">
+				        <i class="menu-icon tf-icons bx bx-user-circle"></i>
+				          <div data-i18n="Analytics">Roles</div>
+				      </a>
+			    </li>
 
             <!-- Product -->
             
@@ -156,7 +163,7 @@
             <!-- Banner -->
             
                 <li class="menu-item">
-                    <a href="/admin/banner" class="menu-link">
+                    <a th:href="@{/admin/banner}" class="menu-link">
                       <i class="menu-icon tf-icons bx bx-collection"></i>
                       <div data-i18n="Analytics">Banner</div>
                     </a>

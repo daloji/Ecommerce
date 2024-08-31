@@ -21,9 +21,11 @@ public class WebSecurityConfig {
 
 	private String[] authorizedURL = {"/","/index","/blog" ,"/blog-detail","/home","/login", "/product","/product-detail/*",
 			                         "/error", "/register","/forgot-password","/register-new",
-			                         "/add-to-cart/*/*","/confirm-account/*","/reset/password/*", "/update-password","/logout",
+			                         "/add-to-cart/*/*/*","/add-to-cart/*/*","/confirm-account/*","/reset/password/*", "/update-password","/logout",
 			                         "/admin","/admin/sales-report","/admin/category","/admin/add-category",
-			                         "/admin/product","/admin/edit-category/*","/admin/add-product","/admin/delete-category/*"};
+			                         "/admin/product","/admin/edit-category/*","/admin/add-product",
+			                         "/admin/banner","/admin/delete-category/*","/admin/delete-product/*",
+			                         "/admin/add-banner","/admin/delete-banner/*","admin/roles","admin/add-roles"};
 	
     @Autowired
     private UserService userService;
@@ -37,7 +39,7 @@ public class WebSecurityConfig {
 		http
 		.authorizeHttpRequests(authConfig -> {
 			authConfig.requestMatchers(HttpMethod.GET, authorizedURL).permitAll();
-			authConfig.requestMatchers(HttpMethod.POST, "/admin/create-product","/admin/create-category","/admin/login","/reset/new-password","/register-new","/reset-password","/update-user").permitAll();
+			authConfig.requestMatchers(HttpMethod.POST, "/admin/create-banner","/admin/create-role","/admin/create-product","/admin/create-category","/admin/login","/reset/new-password","/register-new","/reset-password","/update-user").permitAll();
 			authConfig.anyRequest().authenticated();
 			/*authConfig.requestMatchers(HttpMethod.GET, "/user").hasRole("USER");
 			authConfig.requestMatchers(HttpMethod.GET, "/admin").hasRole("ADMIN");
@@ -71,7 +73,7 @@ public class WebSecurityConfig {
 
 	@Bean
 	WebSecurityCustomizer configureWebSecurity() {
-		return (web) -> web.ignoring().requestMatchers("/images/**","/fonts/**", "/js/**", "/css/**", "/vendor/**");
+		return (web) -> web.ignoring().requestMatchers("/public/**","/images/**","/fonts/**", "/js/**", "/css/**", "/vendor/**");
 	}
 
 }
