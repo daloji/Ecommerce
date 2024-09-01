@@ -5,6 +5,8 @@ import lombok.*;
 
 import java.util.List;
 
+import org.hibernate.annotations.ColumnDefault;
+
 @Entity
 @Table(name = "product_item")
 @Data
@@ -24,6 +26,10 @@ public class ProductItem {
 
     @NonNull
     private String product_img;
+    
+   
+    @Column(nullable = false)
+    private int product_sell;
 
     @NonNull
     private Double price;

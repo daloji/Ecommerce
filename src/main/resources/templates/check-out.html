@@ -172,7 +172,7 @@
                                     th:text="*{cart.getQty()}">
                                 </td>
                                 <td class="column-4 price-item"
-                                    th:text="('$'+ *{cart.item.price})"></td>
+                                    th:text="(*{cart.item.price}+' €')"></td>
                                 <td class="column-5 total-item1" th:text="*{cart.qty * cart.item.price}"></td>
                             </tr>
                         </table>
@@ -220,25 +220,31 @@
                             <div>
                                 <div class="bor8 bg0 m-b-12">
                                     <input class="stext-111 cl8 plh3 size-111 p-lr-15"
-                                           type="text" name="address"
+                                           type="text" th:field="*{road}"
                                            th:placeholder="#{label.placeholder-adress}" required>
                                 </div>
+								
+								<div class="bor8 bg0 m-b-12">
+								     <input class="stext-111 cl8 plh3 size-111 p-lr-15"
+								            type="text" th:field="*{complement}"
+								            th:placeholder="#{label.placeholder-complement}" required>
+								 </div>
 
                                 <div class="bor8 bg0 m-b-12">
                                     <input class="stext-111 cl8 plh3 size-111 p-lr-15"
-                                           type="text" name="district"
+                                           type="text" th:field="*{district}"
                                            th:placeholder="#{label.placeholder-district}" required>
                                 </div>
 
                                 <div class="bor8 bg0 m-b-12">
                                     <input class="stext-111 cl8 plh3 size-111 p-lr-15"
-                                           type="text" name="city"
+                                           type="text" th:field="*{city}"
                                            th:placeholder="#{label.placeholder-city}" required>
                                 </div>
 
                                 <div class="bor8 bg0 m-b-12">
                                     <input class="stext-111 cl8 plh3 size-111 p-lr-15"
-                                           type="text" name="country"
+                                           type="text" th:field="*{country}" th:placeholder="#{label.placeholder-country}"
                                              required>
                                 </div>
                             </div>

@@ -55,10 +55,8 @@ public class CartController {
 		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		if(nonNull(user)) {
 			user.setId(userService.getIdUserByEmail(user.getEmail()));
-
 			List<CartItem> cartList = cartItemService.getAllProductCartWithUser(user.getId());
 			double total = cartItemService.getTotal(cartList);
-
 			model.addAttribute("cart_item", cartList);
 			model.addAttribute("total", total);
 			model.addAttribute("countCart", cartList.size());	

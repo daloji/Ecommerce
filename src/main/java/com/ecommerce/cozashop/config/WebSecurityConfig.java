@@ -25,7 +25,9 @@ public class WebSecurityConfig {
 			                         "/admin","/admin/sales-report","/admin/category","/admin/add-category",
 			                         "/admin/product","/admin/edit-category/*","/admin/add-product",
 			                         "/admin/banner","/admin/delete-category/*","/admin/delete-product/*",
-			                         "/admin/add-banner","/admin/delete-banner/*","admin/roles","admin/add-roles"};
+			                         "/admin/add-banner","/admin/order","/admin/delete-banner/*",
+			                         "/admin/users","admin/roles","admin/add-roles","admin/dashboard",
+			                         "/admin/order-line/*","/admin/order/action-update","/admin/order-to-deliver"};
 	
     @Autowired
     private UserService userService;

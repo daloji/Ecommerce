@@ -42,7 +42,9 @@ public class UserService implements UserDetailsService {
 	}
 
 
-
+	public List<User> findAllUser(){
+		return userRepo.findAll();
+	}
 
 	public boolean checkEmailAlreadyExists(String email) {
 		boolean find = true;

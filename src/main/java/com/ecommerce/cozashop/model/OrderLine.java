@@ -1,9 +1,17 @@
 package com.ecommerce.cozashop.model;
 
-import jakarta.persistence.*;
-import lombok.*;
-
-import java.util.Collection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Table(name = "order_line")
@@ -29,6 +37,9 @@ public class OrderLine {
     @EqualsAndHashCode.Exclude // Do not use this field in equals and hashcode
     @ToString.Exclude   // Do not use this field in toString()
     private ShopOrder shopOrder;
+    
+    @NonNull
+    private DeliveryStatus status;
 
     @NonNull
     private Integer qty;

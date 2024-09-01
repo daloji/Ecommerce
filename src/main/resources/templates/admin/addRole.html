@@ -16,36 +16,7 @@
     <title>Dashboard - Analytics | Sneat - Bootstrap 5 HTML Admin Template - Pro</title>
 
     <meta name="description" content="" />
-
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" th:href="@{/images/icons/favicon.png}"/>
-
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
-      rel="stylesheet"
-    />
-
-    <!-- Icons. Uncomment required icon fonts -->
-   <link rel="stylesheet" type="text/css" th:href="@{/vendor/fonts/boxicons.css}" />
-
-    <!-- Core CSS -->
-	<link rel="stylesheet" type="text/css" th:href="@{/vendor/css/core.css}" class="template-customizer-core-css" />
-	 
-	 <link rel="stylesheet" type="text/css" th:href="@{/vendor/css/theme-default.css}" class="template-customizer-theme-css" />
-	 <!-- Core CSS -->
-	 <link rel="stylesheet" type="text/css" th:href="@{/css/demo.css}">
-
-    <!-- Vendors CSS -->
-	<!-- Vendors CSS -->
-	<link rel="stylesheet" type="text/css" th:href="@{/vendor/libs/perfect-scrollbar/perfect-scrollbar.css}">
-
-	<link rel="stylesheet" type="text/css" th:href="@{/vendor/libs/apex-charts/apex-charts.css}" />
-
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <!-- Page CSS -->
+	<div th:replace="fragments/script.html"/> 
 
     <style>
       #loading-spinner {
@@ -79,111 +50,7 @@
      <div class="layout-wrapper layout-content-navbar" id="content" style="display: none;">
        <div class="layout-container">
          <!-- Menu -->
-
-         <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
-           <div class="app-brand demo">
-             <a href="/admin/dashboard" class="app-brand-link">
-               <span class="app-brand-text demo menu-text fw-bolder ms-2">Coza store</span>
-             </a>
-
-             <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
-               <i class="bx bx-chevron-left bx-sm align-middle"></i>
-             </a>
-           </div>
-
-           <div class="menu-inner-shadow"></div>
-
-           <ul class="menu-inner py-1">
-
-             <!-- Dashboard -->
-             
-                 <li class="menu-item">
-                     <a href="/admin/dashboard" class="menu-link">
-                       <i class="menu-icon tf-icons bx bx-home-circle"></i>
-                       <div data-i18n="Analytics">Dashboard</div>
-                     </a>
-                 </li>
-              
-
-             <!-- Sales Report -->
-             
-                 <li class="menu-item">
-                     <a href="/admin/sales-report" class="menu-link">
-                       <i class="menu-icon tf-icons bx bx-collection"></i>
-                       <div data-i18n="Analytics">Sales Report</div>
-                     </a>
-                 </li>
-              
-
-             <!-- Users -->
-             
-                 <li class="menu-item">
-                     <a href="/admin/users" class="menu-link">
-                       <i class="menu-icon tf-icons bx bx-user-circle"></i>
-                       <div data-i18n="Analytics">Users</div>
-                     </a>
-                 </li>
-              
-
-             <!-- Product -->
-             
-                 <li class="menu-item">
-                     <a href="/admin/product" class="menu-link">
-                       <i class="menu-icon tf-icons bx bx-collection"></i>
-                       <div data-i18n="Analytics">Product</div>
-                     </a>
-                 </li>
-              
-
-             <!-- Category -->
-             
-                 <li class="menu-item active">
-                     <a href="/admin/category" class="menu-link">
-                       <i class="menu-icon tf-icons bx bx-collection"></i>
-                       <div data-i18n="Analytics">Category</div>
-                     </a>
-                 </li>
-              
-
-             <!-- Order -->
-             
-                 <li class="menu-item">
-                     <a href="/admin/order" class="menu-link">
-                       <i class="menu-icon tf-icons bx bx-collection"></i>
-                       <div data-i18n="Analytics">Order</div>
-                     </a>
-                 </li>
-              
-
-             <!-- Coupon -->
-             
-                 <li class="menu-item">
-                     <a href="/admin/coupons" class="menu-link">
-                       <i class="menu-icon tf-icons bx bx-collection"></i>
-                       <div data-i18n="Analytics">Coupon</div>
-                     </a>
-                 </li>
-              
-
-             <!-- Banner -->
-             
-                 <li class="menu-item">
-                     <a href="/admin/banner" class="menu-link">
-                       <i class="menu-icon tf-icons bx bx-collection"></i>
-                       <div data-i18n="Analytics">Banner</div>
-                     </a>
-                 </li>
-              
-
-             <!-- Logout -->
-             <li class="menu-item">
-               <a href="/admin/Logout" class="menu-link">
-                 <div data-i18n="Analytics">Logout</div>
-               </a>
-             </li>
-
-           </ul>
-         </aside>
+		 <div th:replace="fragments/menu.html"/> 
          <!-- / Menu -->
 
          <!-- Layout container -->

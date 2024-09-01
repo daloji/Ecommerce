@@ -17,10 +17,14 @@ public class ProductService {
         return productRepo.findAll();
     }
     
+ 
+    
     public List<Product> getAllProductByName(String name) {
         return productRepo.findAllProductbyname(name);
     }
     
 
-    public Product getProduct(Long id) { return productRepo.findAllById(id);}
+    public Product getProduct(Long id) { 
+    	return productRepo.findAllById(id);
+    }
 }

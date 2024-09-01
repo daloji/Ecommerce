@@ -25,6 +25,7 @@ public class Address {
 	private Long id;
 
 	private String road;
+	private String complement;
 	private String district;
 	private String city;
 	private String country;

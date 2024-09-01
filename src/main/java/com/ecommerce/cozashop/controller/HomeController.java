@@ -47,16 +47,17 @@ public class HomeController {
 
 	@GetMapping("/home")
 	public String showHome(@RequestParam(required = false) String search,Model model) {
+		//TODO shop Cart
 		if(isNull(search)) {
 			List<Banner> listBanner = bannerService.findAllBanner();
-			model.addAttribute("product_list", productService.getAllProduct());
-			model.addAttribute("product_item_list", productItemService.getProductItems());
+			model.addAttribute("product_list", productItemService.getProductAvailable());
+			model.addAttribute("product_item_list", productItemService.getProductItemsAvalaible());
 			model.addAttribute("listBanner", listBanner);
 			return "index";
 		}else {
 			List<Product> listProduct = productService.getAllProductByName(search);
 			model.addAttribute("product_list", listProduct);
-			model.addAttribute("product_item_list", productItemService.getProductItems());
+			model.addAttribute("product_item_list", productItemService.getProductItemsAvalaible());
 			return "product";
 		}
 		
@@ -73,7 +74,7 @@ public class HomeController {
 	public String afterConnection(@RequestParam(required = false) String search,Model model) {
 		if(isNull(search)) {
 			List<Banner> listBanner = bannerService.findAllBanner();
-			model.addAttribute("product_list", productService.getAllProduct());
+			model.addAttribute("product_list", productItemService.getProductAvailable());
 			model.addAttribute("product_item_list", productItemService.getProductItems());
 			model.addAttribute("listBanner", listBanner);
 			
@@ -93,7 +94,7 @@ public class HomeController {
 			
 			List<Product> listProduct = productService.getAllProductByName(search);
 			model.addAttribute("product_list", listProduct);
-			model.addAttribute("product_item_list", productItemService.getProductItems());
+			model.addAttribute("product_item_list", productItemService.getProductItemsAvalaible());
 			return "product";
 		}
 		

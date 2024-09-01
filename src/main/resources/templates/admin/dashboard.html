@@ -4,30 +4,8 @@
     <title>Coza Store</title>
     <meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
-	<link rel="icon" type="image/png" th:href="@{/images/icons/favicon.png}"/>
-	<link rel="preconnect" href="https://fonts.googleapis.com" />
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-	<link
-	      href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
-	      rel="stylesheet"
-	 />
-	 <link rel="stylesheet" type="text/css" th:href="@{/vendor/fonts/boxicons.css}" />
-	 
 	
-	 <link rel="stylesheet" type="text/css" th:href="@{/vendor/css/core.css}" class="template-customizer-core-css" />
-	 <link rel="stylesheet" type="text/css" th:href="@{/vendor/css/theme-default.css}" class="template-customizer-theme-css" />
-	 <link rel="stylesheet" type="text/css" th:href="@{/css/demo.css}">
-
-	 
-	 
-	 <!-- Vendors CSS -->
-	 <link rel="stylesheet" type="text/css" th:href="@{/vendor/libs/perfect-scrollbar/perfect-scrollbar.css}">
-
-	 <link rel="stylesheet" type="text/css" th:href="@{/vendor/libs/apex-charts/apex-charts.css}" />
-
-	 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-	 <!-- Page CSS -->
-	
+	<div th:replace="fragments/script.html"/> 
 
 	   <style>
 	       #loading-spinner {
@@ -68,117 +46,7 @@
       <div class="layout-container">
         <!-- Menu -->
 
-        <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
-          <div class="app-brand demo">
-            <a href="/admin/dashboard" class="app-brand-link">
-              <span class="app-brand-text demo menu-text fw-bolder ms-2">Coza store</span>
-            </a>
-
-            <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
-              <i class="bx bx-chevron-left bx-sm align-middle"></i>
-            </a>
-          </div>
-
-          <div class="menu-inner-shadow"></div>
-
-          <ul class="menu-inner py-1">
-
-            <!-- Dashboard -->
-            
-                <li class="menu-item active">
-                    <a href="/admin/dashboard" class="menu-link">
-                      <i class="menu-icon tf-icons bx bx-home-circle"></i>
-                      <div data-i18n="Analytics">Dashboard</div>
-                    </a>
-                </li>
-             
-
-            <!-- Sales Report -->
-            
-                <li class="menu-item">
-                    <a th:href="@{/admin/sales-report}" class="menu-link">
-                      <i class="menu-icon tf-icons bx bx-collection"></i>
-                      <div data-i18n="Analytics">Sales Report</div>
-                    </a>
-                </li>
-             
-
-            <!-- Users -->
-            
-                <li class="menu-item">
-                    <a href="/admin/users" class="menu-link">
-                      <i class="menu-icon tf-icons bx bx-user-circle"></i>
-                      <div data-i18n="Analytics">Users</div>
-                    </a>
-                </li>
-				
-				
-				<li class="menu-item">
-				    <a th:href="@{/admin/roles}" class="menu-link">
-				        <i class="menu-icon tf-icons bx bx-user-circle"></i>
-				          <div data-i18n="Analytics">Roles</div>
-				      </a>
-			    </li>
-
-            <!-- Product -->
-            
-                <li class="menu-item">
-                    <a th:href="@{/admin/product}" class="menu-link">
-                      <i class="menu-icon tf-icons bx bx-collection"></i>
-                      <div data-i18n="Analytics">Product</div>
-                    </a>
-                </li>
-             
-
-            <!-- Category -->
-            
-                <li class="menu-item">
-                    <a th:href="@{/admin/category}" class="menu-link">
-                      <i class="menu-icon tf-icons bx bx-collection"></i>
-                      <div data-i18n="Analytics">Category</div>
-                    </a>
-                </li>
-             
-
-            <!-- Order -->
-            
-                <li class="menu-item">
-                    <a href="/admin/order" class="menu-link">
-                      <i class="menu-icon tf-icons bx bx-collection"></i>
-                      <div data-i18n="Analytics">Order</div>
-                    </a>
-                </li>
-             
-
-            <!-- Coupon -->
-            
-                <li class="menu-item">
-                    <a href="/admin/coupons" class="menu-link">
-                      <i class="menu-icon tf-icons bx bx-collection"></i>
-                      <div data-i18n="Analytics">Coupon</div>
-                    </a>
-                </li>
-             
-
-            <!-- Banner -->
-            
-                <li class="menu-item">
-                    <a th:href="@{/admin/banner}" class="menu-link">
-                      <i class="menu-icon tf-icons bx bx-collection"></i>
-                      <div data-i18n="Analytics">Banner</div>
-                    </a>
-                </li>
-             
-
-            <!-- Logout -->
-            <li class="menu-item">
-              <a href="/admin/Logout" class="menu-link">
-                <div data-i18n="Analytics">Logout</div>
-              </a>
-            </li>
-
-          </ul>
-        </aside>
+		<div th:replace="fragments/menu.html"/> 
         <!-- / Menu -->
 
         <!-- Layout container -->
@@ -230,7 +98,7 @@
                 </div>
               </div>
               <span class="fw-semibold d-block mb-1">Today's Orders</span>
-              <h3 class="card-title mb-2">0</h3>
+              <h3 class="card-title mb-2" th:text="${nbOrderDaily}"></h3>
             </div>
           </div>
         </div>
@@ -243,7 +111,7 @@
                 </div>
               </div>
               <span class="fw-semibold d-block mb-1">Delivered Monthly Orders</span>
-              <h3 class="card-title mb-2">0</h3>
+              <h3 class="card-title mb-2" th:text="${nbDeliverMonthly}"></h3>
             </div>
           </div>
         </div>
@@ -256,7 +124,7 @@
                 </div>
               </div>
               <span class="fw-semibold d-block mb-1">Order user of Month</span>
-              <h3 class="card-title mb-2">0</h3>
+              <h3 class="card-title mb-2" th:text="${nbOrderMonthly}"></h3>
             </div>
           </div>
         </div>
@@ -269,10 +137,25 @@
                 </div>
               </div>
               <span class="fw-semibold d-block mb-1">Profit of this Month</span>
-              <h3 class="card-title text-nowrap mb-1">₹0</h3>
+              <h3 class="card-title text-nowrap mb-1" th:text="${totalOrderMonthly}"></h3>
             </div>
           </div>
         </div>
+		
+		<!--<div class="col-lg-3 col-md-6 mb-4">
+		         <div class="card">
+		           <div class="card-body">
+		             <div class="card-title d-flex align-items-start justify-content-between">
+		               <div class="avatar flex-shrink-0">
+		                 <img th:src="@{/images/icons/wallet-info.png}" alt="Credit Card" class="rounded" />
+		               </div>
+		             </div>
+		             <span class="fw-semibold d-block mb-1">Profit Total</span>
+		             <h3 class="card-title text-nowrap mb-1">₹0</h3>
+		           </div>
+		         </div>
+		   </div>-->
+		
       </div>
     </div>
   </div>
@@ -338,11 +221,11 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<script>
+<script  th:inline="javascript">
   const codCount = '0'
-  const wltCount = '0'
+  const wltCount = '34'
   const rzpCount = '0'
-
+  var order = /*[[${order}]]*/ ;
   const paymentMethodData = {
     labels: ['Cash on delivery', 'Wallet', 'Razorpay'],
     datasets: [{
@@ -355,20 +238,7 @@
     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], // Add labels for each month
     datasets: [{
       label: 'Monthly Sales',
-      data: [
-        '0',
-        '0',
-        '0',
-        '0',
-        '0',
-        '0',
-        '0',
-        '0',
-        '0',
-        '0',
-        '0',
-        '0',
-      ],
+      data: order,
       backgroundColor: 'rgba(75, 192, 192, 0.2)',
       borderColor: 'rgba(75, 192, 192, 1)',
       borderWidth: 1,

@@ -30,14 +30,12 @@ public class ShopOrder {
     @DateTimeFormat(pattern = "yyyy/MM/dd")
     private LocalDate order_date;
 
-    @NonNull
-    private String shipping_address;
 
     @NonNull
     private Double order_total;
 
     @NonNull
-    private Boolean status;
+    private PaymentStatus status;
 
     @OneToMany(mappedBy = "shopOrder", cascade = CascadeType.ALL)
     @EqualsAndHashCode.Exclude // Do not use this field in equals and hashcode

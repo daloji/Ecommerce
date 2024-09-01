@@ -146,6 +146,9 @@
 	<!-- Shoping Cart -->
 	<div class="bg0 p-t-75 p-b-85">
 		<div class="container">
+			<div th:if="${error}" class="alert alert-danger" role="alert">
+			                            [[${error}]]
+			                        </div>
 			<div class="row">
 				<div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
 					<div class="m-l-25 m-r--38 m-lr-0-xl">

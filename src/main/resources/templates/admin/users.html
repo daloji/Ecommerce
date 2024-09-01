@@ -71,98 +71,47 @@
 
  <div class="container-xxl flex-grow-1 container-p-y">
 
-   <!-- Search -->
-   <form action="/admin/product" id="search">
-     <div class="row d-flex">
-       <div class="col-md-11">
-         <input style="display: inline;" type="text" name="query" class="form-control" placeholder="Search product name...">
-       </div>
-       <button type="submit" class="btn btn-primary col-md-1">Search</button>
-     </div>
-   </form>
-   <!-- /Search -->
-
-   <form action="/admin/product" id="search" style="margin-top: 15px;">
-     <div class="row d-flex">
-       <!-- Category filter dropdown -->
-       <div class="col-md-5">
-         <select name="category" class="form-select">
-           <option value="">All Categories</option>
-		   <option th:each="category : ${list_category}"
-		                      th:text="${category.getCategory_name()}"
-		                      th:value="${category.getId()}">
-         </select>
-       </div>
-
-       <!-- Brand filter dropdown -->
-       <div class="col-md-5">
-         <select name="brand" class="form-select">
-           <option value="">All Brands</option>
-           
-         </select>
-       </div>
-
-       <button type="submit" class="btn btn-primary col-lg-2">Filter</button>
-
-     </div>
-
-   </form>
-
-   <a th:href="@{/admin/add-product}"><button style="margin-top: 20px;" type="button" class="btn btn-primary btn-lg">Add product</button></a>
+   <a th:href="@{/admin/add-product}"><button style="margin-top: 20px;" type="button" class="btn btn-primary btn-lg">Add User</button></a>
 
    <!-- Basic Bootstrap Table -->
    <div class="card" style="margin-top: 20px;">
-     <h5 class="card-header">Products</h5>
+     <h5 class="card-header">Users</h5>
      <div class="table-responsive text-nowrap">
        <table class="table">
          <thead>
            <tr>
-             <th>Product image</th>
-             <th>Product Name</th>
-             <th>Brand</th>
-             <th>Category</th>
-             <th>Price</th>
-             <th>Stock</th>
+             <th>First Name</th>
+             <th>Last Name</th>
+             <th>Email</th>
+             <th>Phone</th>
+			 <th>Road</th>
+			 <th>District</th>
+			 <th>City</th>
+			 <th>Country</th>
+			 <th>Role</th>
              <th>Actions</th>
            </tr>
          </thead>
          <tbody class="table-border-bottom-0">
            
-           	<tr th:each="product : ${listProductItems}" class="table_row">
+           	<tr th:each="user : ${listUser}" class="table_row">
+				<td th:text="${user.first_name}"></td>
+				<td th:text="${user.last_name}"></td>
+				<td th:text="${user.email}"></td>
+				<td th:text="${user.phone}"></td>
+				<td th:text="${user.address.road}"></td>
+				<td th:text="${user.address.district}"></td>
+				<td th:text="${user.address.city}"></td>
+				<td th:text="${user.address.country}"></td>
 				<td>
-				    <div class="row">
-				        <div class="col-4">
-				            <img th:src="${product.product_id.product_img}" alt="" class="img-click" style="width: 60px; height: 70px;">
-				         </div>
-				      </div>
-			     </td>
-				
-				<td th:text="${product.product_id.product_name}"></td>
-				<td th:text="${product.product_id.productCategory.category_name}"></td>
-				<td th:text="${product.product_id.productCategory.category_name}"></td>
-				<td th:text="${product.price}"></td>
-				<td th:text="${product.qty_in_stock}"></td>
-				<td>
-					<a class="dropdown-item" th:href="@{'/admin/edit-product/'+${product.getId()}}"><i class="bx bx-edit-alt me-2"></i> Edit</a>
-					<a class="dropdown-item" th:href="@{'/admin/delete-product/'+${product.getId()}}"><i class="bx bx-trash me-2"></i> Delete</a>
+					<a class="dropdown-item" th:href="@{'/admin/edit-product/'+${user.id}}"><i class="bx bx-edit-alt me-2"></i> Edit</a>
+					<a class="dropdown-item" th:href="@{'/admin/delete-product/'+${user.id}}"><i class="bx bx-trash me-2"></i> Delete</a>
 			   </td>
 			</tr>
            
-           <!-- Add more rows as needed -->
+
          </tbody>
 		 
-		 
-		 <!--
-		 <tbody class="table-border-bottom-0">
-		 	<tr th:each="category : ${list_category}" class="table_row">
-		 		 <td th:text="${category.getId()}"></td>
-		 	     <td th:text="${category.getCategory_name()}"></td>
-		 		  <td th:text="${category.getId()}"></td>
-		           </tr>
-		 	</tr>
-		      </tbody>-->
-			  
-			  
 			  
        </table>
      </div>
