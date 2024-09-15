@@ -99,6 +99,10 @@ public class UserService implements UserDetailsService {
 	public void updateAccount(User user) {
 		userRepo.save(user);
 	}
+	
+	public User findById(Integer id) {
+		return userRepo.findById(id);
+	}
 
 	public String getPasswordByEmail(String email) {
 		return userRepo.getPassword(email);
@@ -115,6 +119,10 @@ public class UserService implements UserDetailsService {
 			present = true;
 		}
 		return present;
+	}
+	
+	public void deleteUser(User user) {
+		userRepo.delete(user);	
 	}
 
 }

@@ -210,6 +210,9 @@ public class UserController {
 	}
 
 
+	
+
+	
 	@PostMapping("/update-user")
 	public String postUser(@ModelAttribute UpdateUser updateuser) {
 		Authentication authentification = SecurityContextHolder.getContext().getAuthentication();
@@ -225,6 +228,9 @@ public class UserController {
 				}
 				if(nonNull(updateuser.getAdresse().getRoad())) {
 					adresse.setRoad(updateuser.getAdresse().getRoad());
+				}
+				if(nonNull(updateuser.getAdresse().getComplement())) {
+					adresse.setComplement(updateuser.getAdresse().getComplement());
 				}
 				if(nonNull(updateuser.getAdresse().getCity())) {
 					adresse.setCity(updateuser.getAdresse().getCity());

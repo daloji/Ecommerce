@@ -71,7 +71,7 @@
 
  <div class="container-xxl flex-grow-1 container-p-y">
 
-   <a th:href="@{/admin/add-product}"><button style="margin-top: 20px;" type="button" class="btn btn-primary btn-lg">Add User</button></a>
+   <a th:href="@{/admin/add-user}"><button style="margin-top: 20px;" type="button" class="btn btn-primary btn-lg">Add User</button></a>
 
    <!-- Basic Bootstrap Table -->
    <div class="card" style="margin-top: 20px;">
@@ -84,6 +84,7 @@
              <th>Last Name</th>
              <th>Email</th>
              <th>Phone</th>
+			 <th>Complement</th>
 			 <th>Road</th>
 			 <th>District</th>
 			 <th>City</th>
@@ -99,13 +100,26 @@
 				<td th:text="${user.last_name}"></td>
 				<td th:text="${user.email}"></td>
 				<td th:text="${user.phone}"></td>
-				<td th:text="${user.address.road}"></td>
-				<td th:text="${user.address.district}"></td>
-				<td th:text="${user.address.city}"></td>
-				<td th:text="${user.address.country}"></td>
+				
+				<th:block th:if="${user.address != null}"> 
+					<td th:text="${user.address.complement}"></td>
+					<td th:text="${user.address.road}"></td>
+					<td th:text="${user.address.district}"></td>
+					<td th:text="${user.address.city}"></td>
+					<td th:text="${user.address.country}"></td>
+				</th:block>
+				
+				<th:block th:if="${user.address == null}"> 
+					<td text=""></td>
+					<td text=""></td>
+					<td text=""></td>
+					<td text=""></td>
+					<td text=""></td>
+				</th:block>
+				<td th:text="${user.role.role_name}"></td>
 				<td>
-					<a class="dropdown-item" th:href="@{'/admin/edit-product/'+${user.id}}"><i class="bx bx-edit-alt me-2"></i> Edit</a>
-					<a class="dropdown-item" th:href="@{'/admin/delete-product/'+${user.id}}"><i class="bx bx-trash me-2"></i> Delete</a>
+					<a class="dropdown-item" th:href="@{'/admin/edit-user/'+${user.id}}"><i class="bx bx-edit-alt me-2"></i> Edit</a>
+					<a class="dropdown-item" th:href="@{'/admin/delete-user/'+${user.id}}"><i class="bx bx-trash me-2"></i> Delete</a>
 			   </td>
 			</tr>
            

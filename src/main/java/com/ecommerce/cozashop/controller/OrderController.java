@@ -57,6 +57,9 @@ public class OrderController {
 	
 	@Autowired
 	private MessageSource messageSource;
+	
+	@Autowired
+	private PdfGeneratorService pdfGenaratorService;
 
 	@GetMapping("/check-out")
 	public String show(Model model) {
@@ -84,7 +87,7 @@ public class OrderController {
 
 	@PostMapping("/check-out")
 	public ModelAndView checkOut(@ModelAttribute CartItem item, @ModelAttribute Address fullAddress, Model model) {
-
+		Map<ProductItem,Integer> mapProductQty = new HashMap<>();
 		Authentication authentification = SecurityContextHolder.getContext().getAuthentication();
 		Map<ProductItem,String> mapError = new HashMap<>();
 		if(nonNull(authentification) && !( authentification instanceof AnonymousAuthenticationToken)) {
@@ -103,6 +106,7 @@ public class OrderController {
 				if(productAvalaible<cartItem.getQty()) {
 					mapError.put(productItem, messageSource.getMessage("label.not_enough",null, locale));
 				}
+				mapProductQty.put(productItem, cartItem.getQty());
 			}
 			
 			if(mapError.isEmpty()) {
@@ -113,7 +117,7 @@ public class OrderController {
 				shopOrder.setStatus(PaymentStatus.PENDING);
 				shopOrderService.createNewOrder(shopOrder);
 
-				
+				pdfGenaratorService.generateInvoice(mapProductQty,user,fullAddress);
 				//TODO activate Strip
 				/*
 				Session sessionService = stripService.stripePayment(cartList);

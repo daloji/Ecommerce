@@ -6,7 +6,6 @@ import static java.util.Objects.nonNull;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -22,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.ecommerce.cozashop.model.Address;
 import com.ecommerce.cozashop.model.Banner;
 import com.ecommerce.cozashop.model.BannerForm;
 import com.ecommerce.cozashop.model.DeliveryStatus;
@@ -73,12 +73,14 @@ public class AdminController {
 
 
 	@GetMapping("/admin")
-	public String showAdmin() {
-		return "admin/dashboard";
+	public String showAdmin(Model model) {
+		return showDashboard(model);
 	}
 
 	@GetMapping("/admin/sales-report")
 	public String showSalesReport(Model model) {
+		List<ShopOrder> listShoper = shopOrderService.findAllShopOrder();	
+		model.addAttribute("listShoper", listShoper);
 		return "admin/sales-report";
 	}
 
@@ -118,6 +120,7 @@ public class AdminController {
 	}
 
 
+
 	@GetMapping("/admin/dashboard")
 	public String showDashboard(Model model) {	
 		LocalDate now = LocalDate.now().with(TemporalAdjusters.firstDayOfMonth());
@@ -127,11 +130,12 @@ public class AdminController {
 			double totalOrderMonthly = 0;
 			int totalDeliver = 0;
 			int todayOrder = 0;
+			LocalDate nowdate = LocalDate.now(); 
 			for(ShopOrder shopOrder:listShopOrder) {
 				if(shopOrder.getStatus() == PaymentStatus.ACCEPT) {
 					totalOrderMonthly = totalOrderMonthly + shopOrder.getOrder_total();
 				}
-				if(now.isEqual(shopOrder.getOrder_date()) && shopOrder.getStatus() == PaymentStatus.ACCEPT){
+				if(nowdate.isEqual(shopOrder.getOrder_date()) && shopOrder.getStatus() == PaymentStatus.ACCEPT){
 					todayOrder ++;
 				}
 				List<OrderLine> listShopDelivery = shopOrder.getOrderLines();
@@ -140,12 +144,12 @@ public class AdminController {
 						totalDeliver = totalDeliver + 1;	
 					}
 				}
-	
+
 			}
 			int[] order = shopOrderService.getDistributionOrder();
 			String[] stringArray = new String[order.length]; 
 			for (int i = 0; i < order.length; i++) { 
-			    stringArray[i] = Integer.toString(order[i]); 
+				stringArray[i] = Integer.toString(order[i]); 
 			} 
 			model.addAttribute("totalOrderMonthly", totalOrderMonthly + " €");
 			model.addAttribute("nbOrderMonthly", listShopOrder.size());
@@ -210,6 +214,67 @@ public class AdminController {
 	}
 
 
+
+	@GetMapping("/admin/edit-user/{id}")
+	public String editUser(@PathVariable("id") Integer id,Model model) {
+
+		User user = userService.findById(id);
+		if(nonNull(user)) {
+			model.addAttribute("user", user);	
+		}
+
+		List<Role> listRole = roleService.getRoles();
+		model.addAttribute("listRole", listRole);
+		return "admin/editUser";
+	}
+
+	@PostMapping("/admin/edit-user")
+	public String updateUser(@ModelAttribute User user) {
+		Long id = user.getId();
+		User olduser = userService.findById(id.intValue());
+		if(nonNull(user.getEmail())) {
+			olduser.setEmail(user.getEmail());
+		}
+		if(nonNull(user.getFirst_name())) {
+			olduser.setFirst_name(user.getFirst_name());
+		}
+		if(nonNull(user.getLast_name())) {
+			olduser.setLast_name(user.getFirst_name());
+		}
+		if(nonNull(user.getPhone())) {
+			olduser.setPhone(user.getPhone());
+		}
+		if(nonNull(user.getRole())) {
+			olduser.setRole(user.getRole());
+		}
+		if(nonNull(user.getAddress())) {
+			Address oldAdresse = olduser.getAddress();
+			Address adresse = user.getAddress();
+			if(nonNull(adresse.getCity())) {
+				oldAdresse.setCity(adresse.getCity());
+			}
+			if(nonNull(adresse.getComplement())) {
+				oldAdresse.setComplement(adresse.getComplement());
+			}
+			if(nonNull(adresse.getCountry())) {
+				oldAdresse.setCountry(adresse.getCountry());
+			}
+			if(nonNull(adresse.getDistrict())) {
+				oldAdresse.setDistrict(adresse.getDistrict());
+			}
+
+			if(nonNull(adresse.getRoad())) {
+				oldAdresse.setRoad(adresse.getRoad());
+			}
+			olduser.setAddress(oldAdresse);
+		}
+
+		userService.updateAccount(olduser);
+		return "admin/dashboard";
+	}
+
+
+
 	@GetMapping("/admin/edit-category/{id}")
 	public String editCategory(@PathVariable(name = "id") Integer id,Model model) {
 		ProductCategory productCategory = productCatecoryService.findCategoryById(id);
@@ -226,6 +291,13 @@ public class AdminController {
 		List<ProductCategory>  listCategory = productCatecoryService.findAllProductCategory();
 		model.addAttribute("list_category", listCategory);
 		return new ModelAndView("admin/category");
+	}
+
+	@GetMapping("/admin/delete-user/{id}")
+	public String deleteUser(@PathVariable(name = "id") Integer id) {
+		User user = userService.getUserById((long)id);
+		userService.deleteUser(user);
+		return "redirect:/admin/users";
 	}
 
 	@PostMapping("/admin/create-product")
@@ -326,6 +398,11 @@ public class AdminController {
 		return "admin/dashboard";
 	}
 
+	@GetMapping("/admin/product-inventory")
+	public String productInventory(Model model) {
+
+		return "admin/product-inventory";
+	}
 
 
 	@GetMapping("/admin/order")
@@ -345,9 +422,9 @@ public class AdminController {
 		}
 		return "admin/order-line";
 	}
-	
-	
-	
+
+
+
 	@GetMapping("/admin/order-to-deliver")
 	public String showOrderTodeliver(Model model) {
 		Set<ShopOrder> listshop = new HashSet<ShopOrder>();
@@ -368,8 +445,6 @@ public class AdminController {
 		}
 		return "admin/order-to-deliver";
 	}
-	
-	
 
 
 	@GetMapping("/admin/order/action-update")
@@ -385,6 +460,4 @@ public class AdminController {
 		}
 		return "admin/order-line";
 	}
-
-
 }

@@ -123,6 +123,7 @@
              <th>Category</th>
              <th>Price</th>
              <th>Stock</th>
+			 <th>Sale</th>
              <th>Actions</th>
            </tr>
          </thead>
@@ -141,7 +142,19 @@
 				<td th:text="${product.product_id.productCategory.category_name}"></td>
 				<td th:text="${product.product_id.productCategory.category_name}"></td>
 				<td th:text="${product.price}"></td>
-				<td th:text="${product.qty_in_stock}"></td>
+				
+				<th:block th:if="${product.qty_in_stock} - ${product.product_sell} &gt;5"> 
+					<td>
+						 <h6 class="text-success" th:text="${product.qty_in_stock}"></h6>
+					</td>	
+				</th:block>
+				<th:block th:if="${product.qty_in_stock} - ${product.product_sell} &lt;5"> 
+					<td>
+						<h6 class="text-danger" th:text="${product.qty_in_stock}"></h6>
+				  </td>					
+				</th:block>
+				
+				<td th:text="${product.product_sell}"></td>
 				<td>
 					<a class="dropdown-item" th:href="@{'/admin/edit-product/'+${product.getId()}}"><i class="bx bx-edit-alt me-2"></i> Edit</a>
 					<a class="dropdown-item" th:href="@{'/admin/delete-product/'+${product.getId()}}"><i class="bx bx-trash me-2"></i> Delete</a>

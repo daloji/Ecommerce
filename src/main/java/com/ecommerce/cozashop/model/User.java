@@ -100,6 +100,12 @@ public class User implements UserDetails {
     @ToString.Exclude
     private List<CartItem> cartItems;
     
+    
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private List<Invoice> listInvoice;
+    
     @NonNull
     private Locale local;
 

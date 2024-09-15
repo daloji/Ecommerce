@@ -1,40 +1,89 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Coza Store</title>
-    <meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+
+<!-- =========================================================
+* Sneat - Bootstrap 5 HTML Admin Template - Pro | v1.0.0
+==============================================================
+
+* Product Page: https://themeselection.com/products/sneat-bootstrap-html-admin-template/
+* Created by: ThemeSelection
+* License: You must have a valid license purchased in order to legally use the theme for your project.
+* Copyright ThemeSelection (https://themeselection.com)
+
+=========================================================
+ -->
+<!-- beautify ignore:start -->
+<html
+  lang="en"
+  class="light-style layout-menu-fixed"
+  dir="ltr"
+  data-theme="theme-default"
+  data-assets-path="../assets/"
+  data-template="vertical-menu-template-free"
+>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
+    />
+
+    <title>Dashboard - Analytics | Sneat - Bootstrap 5 HTML Admin Template - Pro</title>
+
+    <meta name="description" content="" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="../assets/img/favicon/favicon.ico" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Icons. Uncomment required icon fonts -->
+    <link rel="stylesheet" href="../assets/vendor/fonts/boxicons.css" />
+
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="../assets/vendor/css/core.css" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="../assets/vendor/css/theme-default.css" class="template-customizer-theme-css" />
+    <link rel="stylesheet" href="../assets/css/demo.css" />
+
+    <!-- Vendors CSS -->
+    <link rel="stylesheet" href="../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
+
+    <link rel="stylesheet" href="../assets/vendor/libs/apex-charts/apex-charts.css" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Page CSS -->
 	<div th:replace="fragments/script.html"/> 
-	
+    <style>
+      #loading-spinner {
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #3498db;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin: 20% auto;
+}
 
-	  <style>
-	       #loading-spinner {
-	     border: 8px solid #f3f3f3;
-	     border-top: 8px solid #3498db;
-	     border-radius: 50%;
-	     width: 50px;
-	     height: 50px;
-	     animation: spin 1s linear infinite;
-	     margin: 20% auto;
-	 }
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
 
-	 @keyframes spin {
-	     0% { transform: rotate(0deg); }
-	     100% { transform: rotate(360deg); }
-	 }
+#content {
+    display: none;
+}
+    </style>
+    
+	 <script th:src="@{/vendor/js/helpers.js}"></script>
+	<script th:src="@{/js/config.js}"></script>
+  </head>
 
-	 #content {
-	     display: none;
-	 }
-	     </style>
-	 
-	 <!-- Helpers -->
-	 
-	  <script th:src="@{/vendor/js/helpers.js}"></script>
-	  <script th:src="@{/js/config.js}"></script>
- 
-</head>
-<body>
+  <body>
     <div id="loading-spinner"></div>
     <!-- Layout wrapper -->
     <div class="layout-wrapper layout-content-navbar" id="content" style="display: none;">
@@ -112,11 +161,60 @@
           </thead>
           <tbody>
             
-            <tr>
-              <td colspan="6">
-                No data found.
+				
+			<tr th:each="shopOrder : ${listShoper}" class="border-bottom">
+				<td>
+					<p class="text-dark" th:text="${shopOrder.user.email}"></p>
+				</td>
+				<td>
+				  <p class="text-dark" th:text="${shopOrder.user.email}"></p>
+				</td>
+				<td>
+					<p class="text-dark" th:text="${shopOrder.user.email}"></p>
+				</td>
+				<td>
+					<p class="text-dark" th:text="${shopOrder.order_date}"></p>
+				</td>
+			</tr>
+			<!--
+            <tr class=" border-bottom">
+              <td>
+                admin<br>
+                <p class="text-dark">jiantila@gmail.com</p><br>
+                
               </td>
-            </tr>
+              <td>
+                oopp,
+                Rennes<br>
+                ,
+                Pincode: 2511<br>
+                House No.: 
+              </td>
+              <td>
+                <div>
+                  <div class="border-bottom mb-3">
+                    <span class="text-primary h6 text-uppercase">
+                      Sac a main
+                    </span><br>
+                    Price: 152,
+                    Quantity: 1
+                  </div>
+                  <span>
+                    <strong>
+                      Payment Method: Cash on delivery<br>
+                      Status:
+                      
+                        Processing
+                      
+                    </strong>
+                  </span>
+              </td>
+              <td>
+                Order Confirmed, 15/09/2024<br>
+                Delivery, 22/09/2024
+              </td>
+            </tr>-->
+            
             
           </tbody>
         </table>
