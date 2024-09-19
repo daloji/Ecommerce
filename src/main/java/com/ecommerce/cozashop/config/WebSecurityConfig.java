@@ -24,8 +24,8 @@ public class WebSecurityConfig {
 			                         "/add-to-cart/*/*/*","/add-to-cart/*/*","/confirm-account/*","/reset/password/*", "/update-password","/logout",
 			                         "/admin","/admin/sales-report","/admin/category","/admin/add-category",
 			                         "/admin/product","/admin/edit-category/*","/admin/add-product",
-			                         "/admin/banner","/admin/delete-category/*","/admin/delete-product/*",
-			                         "/admin/add-banner","/admin/order","/admin/delete-banner/*",
+			                         "/admin/banner","/admin/delete-category/*","/admin/delete-product/*","/admin/logo","/admin/add-logo",
+			                         "/admin/add-banner","/admin/order","/admin/delete-banner/*","/actuator/health/*",
 			                         "/admin/edit-user/*","/admin/delete-user/*","/admin/users","admin/roles","admin/add-roles","admin/dashboard","/admin/product-inventory",
 			                         "/admin/order-line/*","/admin/order/action-update","/admin/order-to-deliver"};
 	
@@ -41,7 +41,7 @@ public class WebSecurityConfig {
 		http
 		.authorizeHttpRequests(authConfig -> {
 			authConfig.requestMatchers(HttpMethod.GET, authorizedURL).permitAll();
-			authConfig.requestMatchers(HttpMethod.POST, "/admin/edit-user","/admin/create-banner","/admin/create-role","/admin/create-product","/admin/create-category","/admin/login","/reset/new-password","/register-new","/reset-password","/update-user").permitAll();
+			authConfig.requestMatchers(HttpMethod.POST, "/admin/create-logo","/admin/edit-user","/admin/create-banner","/admin/create-role","/admin/create-product","/admin/create-category","/admin/login","/reset/new-password","/register-new","/reset-password","/update-user").permitAll();
 			authConfig.anyRequest().authenticated();
 			/*authConfig.requestMatchers(HttpMethod.GET, "/user").hasRole("USER");
 			authConfig.requestMatchers(HttpMethod.GET, "/admin").hasRole("ADMIN");

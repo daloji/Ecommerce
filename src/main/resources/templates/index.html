@@ -68,13 +68,16 @@
 			</div>
 		</div>
 
-		<div class="wrap-menu-desktop">
+		<div class="wrap-menu-desktop" th:object="${logo}">
 			<nav class="limiter-menu-desktop container">
 
-				<!-- Logo desktop -->
-				<a th:href="@{/home}" class="logo">
-					<img th:src="@{/images/icons/logo-01.png}" alt="IMG-LOGO">
-				</a>
+				<th:block th:if="${logo.imageLogo != null}"> 
+					<!-- Logo desktop -->
+					<a th:href="@{/home}" class="logo">
+						<img th:src="@{${logo.imageLogo}}" alt="IMG-LOGO">
+					</a>
+				</th>
+			
 
 				<!-- Menu desktop -->
 				<div class="menu-desktop">

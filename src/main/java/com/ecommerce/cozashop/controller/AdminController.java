@@ -26,6 +26,8 @@ import com.ecommerce.cozashop.model.Banner;
 import com.ecommerce.cozashop.model.BannerForm;
 import com.ecommerce.cozashop.model.DeliveryStatus;
 import com.ecommerce.cozashop.model.ImageProduct;
+import com.ecommerce.cozashop.model.Logo;
+import com.ecommerce.cozashop.model.LogoForm;
 import com.ecommerce.cozashop.model.OrderLine;
 import com.ecommerce.cozashop.model.PaymentStatus;
 import com.ecommerce.cozashop.model.Product;
@@ -37,6 +39,7 @@ import com.ecommerce.cozashop.model.ShopOrder;
 import com.ecommerce.cozashop.model.User;
 import com.ecommerce.cozashop.service.BannerService;
 import com.ecommerce.cozashop.service.FileStorageService;
+import com.ecommerce.cozashop.service.LogoService;
 import com.ecommerce.cozashop.service.OrderLineService;
 import com.ecommerce.cozashop.service.ProductCategoryService;
 import com.ecommerce.cozashop.service.ProductItemService;
@@ -70,6 +73,9 @@ public class AdminController {
 
 	@Autowired
 	OrderLineService orderLineService;
+	
+	@Autowired
+	LogoService logoService;
 
 
 	@GetMapping("/admin")
@@ -107,7 +113,26 @@ public class AdminController {
 		}
 		return "admin/product";
 	}
+	
+	
+	@GetMapping("/admin/logo")
+	public String showLogo(Model model) {
+		Logo logo = logoService.getLogo();
+		LogoForm logoForm = new LogoForm();
+		logoForm.setLogo(logo);
+		model.addAttribute("logo", logoForm);	
+		return "admin/logo";
+	}
 
+
+	@GetMapping("/admin/add-logo")
+	public String showAddLogo(Model model) {
+		Logo logo = new Logo();
+		LogoForm logoForm = new LogoForm();
+		logoForm.setLogo(logo);
+		model.addAttribute("logo", logoForm);	
+		return "admin/addLogo";
+	}
 
 	@GetMapping("/admin/users")
 	public String showUsers(Model model) {
@@ -214,6 +239,22 @@ public class AdminController {
 	}
 
 
+	
+	@PostMapping("/admin/create-logo")
+	public String createAdmin(@ModelAttribute LogoForm logoform,
+			Model model) {
+		if(nonNull(logoform.getLogo())) {
+			Logo logo = logoform.getLogo();
+			MultipartFile bannerFile = logoform.getBannerFile();
+			if(nonNull(bannerFile)) {
+				String file = fileStorage.saveFile(bannerFile);
+				logo.setImageLogo(file);
+			}
+			
+			logoService.addLogo(logo);
+		}
+		return "admin/dashboard";
+	}
 
 	@GetMapping("/admin/edit-user/{id}")
 	public String editUser(@PathVariable("id") Integer id,Model model) {

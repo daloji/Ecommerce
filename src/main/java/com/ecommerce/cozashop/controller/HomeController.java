@@ -17,10 +17,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ecommerce.cozashop.model.Banner;
 import com.ecommerce.cozashop.model.CartItem;
+import com.ecommerce.cozashop.model.Logo;
 import com.ecommerce.cozashop.model.Product;
 import com.ecommerce.cozashop.model.User;
 import com.ecommerce.cozashop.service.BannerService;
 import com.ecommerce.cozashop.service.CartItemService;
+import com.ecommerce.cozashop.service.LogoService;
 import com.ecommerce.cozashop.service.ProductItemService;
 import com.ecommerce.cozashop.service.ProductService;
 
@@ -43,6 +45,9 @@ public class HomeController {
 	
 	@Autowired
 	private BannerService bannerService;
+	
+	@Autowired
+	private LogoService logoService;
 
 
 	@GetMapping("/home")
@@ -74,10 +79,14 @@ public class HomeController {
 	public String afterConnection(@RequestParam(required = false) String search,Model model) {
 		if(isNull(search)) {
 			List<Banner> listBanner = bannerService.findAllBanner();
+			Logo logo = logoService.getLogo();
+			if(isNull(logo)) {
+				logo = new Logo();
+			}
 			model.addAttribute("product_list", productItemService.getProductAvailable());
 			model.addAttribute("product_item_list", productItemService.getProductItems());
 			model.addAttribute("listBanner", listBanner);
-			
+			model.addAttribute("logo", logo);
 			Authentication authentification = SecurityContextHolder.getContext().getAuthentication();
 			if(nonNull(authentification) && !( authentification instanceof AnonymousAuthenticationToken)) {
 				User user = (User) authentification.getPrincipal();
