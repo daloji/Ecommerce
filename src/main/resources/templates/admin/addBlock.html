@@ -82,45 +82,44 @@
             </div>
 
 <div class="container-xxl flex-grow-1 container-p-y">
-  <h4 class="fw-bold mb-4">Add Logo</h4>
+  <h4 class="fw-bold mb-4">Add Block</h4>
 
   <!-- Basic Layout & Basic with Icons -->
   <div class="row">
     <!-- Basic Layout -->
     <div class="col-xxl">
-      <a class="btn btn-primary" th:action="@{/admin/logo}"  role="button">Back to Logo</a>
+      <a class="btn btn-primary" th:action="@{/admin/block}"  role="button">Back to Block</a>
       <div class="card mb-4" style="margin-top: 20px;">
         <div class="card-body">
-          <form method="post" th:action="@{/admin/create-logo}" th:object="${logo}" enctype="multipart/form-data">
+          <form method="post" th:action="@{/admin/create-block}" th:object="${block}" enctype="multipart/form-data">
    
-			<input type="hidden" th:field="${logo.logo.id}"/>
+			<input type="hidden" th:field="${block.block.id}"/>
 
             <div class="row mb-3">
               <label class="col-sm-2 col-form-label" for="basic-default-name">Title</label>
               <div class="col-sm-10">
-                <input type="text" class="form-control" id="basic-default-name" placeholder="Title of logo" th:field="${logo.logo.title}" oninput="validateFeild(this)" required/>
+                <input type="text" class="form-control" id="basic-default-name" placeholder="Title of logo" th:field="${block.block.title}" oninput="validateFeild(this)" required/>
               </div>
             </div>
 
+			
+			<div class="row mb-3">
+			  <label class="col-sm-2 col-form-label" for="basic-default-name">Small Title</label>
+			  <div class="col-sm-10">
+			     <input type="text" class="form-control" id="basic-default-name" placeholder="Title of logo" th:field="${block.block.smallTitle}" oninput="validateFeild(this)" required/>
+			   </div>
+		   </div>
             <div class="row mb-3">
               <label class="col-sm-2 col-form-label" for="images">Image</label>
               <div class="col-sm-10">
-                <input type="file" class="form-control" id="basic-default-name images" th:field="${logo.bannerFile}" data-target-index="1" accept="image/*" required/>
+                <input type="file" class="form-control" id="basic-default-name images" th:field="${block.blockFile}" data-target-index="1" accept="image/*" required/>
               </div>
             </div>
 
-          <!--  <div class="row mb-3">
-              <label class="col-sm-2 col-form-label" for="basic-default-name">Category</label>
-              <div class="col-sm-10">
-                <select class="form-control border border-primary" id="basic-default-name" name="category">
-                  
-                </select><br>
-              </div>
-            </div>-->
 
             <div class="row justify-content-end">
               <div class="col-sm-10">
-                <button type="submit" class="btn btn-primary">Add Logo</button>
+                <button type="submit" class="btn btn-primary">Add Block</button>
               </div>
             </div>
           </form>

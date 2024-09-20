@@ -1,5 +1,7 @@
 package com.ecommerce.cozashop.controller;
 
+import static java.util.Objects.isNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,9 +12,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.ecommerce.cozashop.model.ImageProduct;
+import com.ecommerce.cozashop.model.Logo;
 import com.ecommerce.cozashop.model.ProductItem;
 import com.ecommerce.cozashop.model.ProductSize;
 import com.ecommerce.cozashop.service.ImageProductService;
+import com.ecommerce.cozashop.service.LogoService;
 import com.ecommerce.cozashop.service.ProductItemService;
 import com.ecommerce.cozashop.service.ProductService;
 import com.ecommerce.cozashop.service.ProductSizeService;
@@ -36,10 +40,16 @@ public class ProductController {
     @Autowired
     private ImageProductService imageProductService;
 
-
+    @Autowired
+	private LogoService logoService;
 
     @GetMapping("/product")
     public String showProduct(Model model) {
+    	Logo logo = logoService.getLogo();
+		model.addAttribute("logo", logo);
+		if(isNull(logo)) {
+			logo = new Logo();
+		}
         model.addAttribute("product_list", productService.getAllProduct());
         model.addAttribute("product_item_list", productItemService.getProductItems());
         return "product";

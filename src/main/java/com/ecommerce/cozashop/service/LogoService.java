@@ -29,4 +29,8 @@ public class LogoService {
 		logoRepo.save(logo);
 	}
 	
+	public void delete(int id) {
+		logoRepo.deleteById(id);
+	}
+	
 }

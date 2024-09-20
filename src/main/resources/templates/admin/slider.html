@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 
 <!-- =========================================================
@@ -30,8 +31,36 @@
     <title>Dashboard - Analytics | Sneat - Bootstrap 5 HTML Admin Template - Pro</title>
 
     <meta name="description" content="" />
-	
-	<div th:replace="fragments/script.html"/> 
+
+	<!-- Favicon -->
+	    <link rel="icon" type="image/png" th:href="@{/images/icons/favicon.png}"/>
+
+	    <!-- Fonts -->
+	    <link rel="preconnect" href="https://fonts.googleapis.com" />
+	    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	    <link
+	      href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+	      rel="stylesheet"
+	    />
+
+	    <!-- Icons. Uncomment required icon fonts -->
+	   <link rel="stylesheet" type="text/css" th:href="@{/vendor/fonts/boxicons.css}" />
+
+	    <!-- Core CSS -->
+		<link rel="stylesheet" type="text/css" th:href="@{/vendor/css/core.css}" class="template-customizer-core-css" />
+		 
+		 <link rel="stylesheet" type="text/css" th:href="@{/vendor/css/theme-default.css}" class="template-customizer-theme-css" />
+		 <!-- Core CSS -->
+		 <link rel="stylesheet" type="text/css" th:href="@{/css/demo.css}">
+
+	    <!-- Vendors CSS -->
+		<!-- Vendors CSS -->
+		<link rel="stylesheet" type="text/css" th:href="@{/vendor/libs/perfect-scrollbar/perfect-scrollbar.css}">
+
+		<link rel="stylesheet" type="text/css" th:href="@{/vendor/libs/apex-charts/apex-charts.css}" />
+
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+	    <!-- Page CSS -->
 		
     <style>
       #loading-spinner {
@@ -56,6 +85,8 @@
     
 	<script th:src="@{/vendor/js/helpers.js}"></script>
 	<script th:src="@{/js/config.js}"></script>
+	
+	
   </head>
 
   <body>
@@ -82,52 +113,50 @@
             </div>
 
 <div class="container-xxl flex-grow-1 container-p-y">
-  <h4 class="fw-bold mb-4">Add Logo</h4>
 
-  <!-- Basic Layout & Basic with Icons -->
-  <div class="row">
-    <!-- Basic Layout -->
-    <div class="col-xxl">
-      <a class="btn btn-primary" th:action="@{/admin/logo}"  role="button">Back to Logo</a>
-      <div class="card mb-4" style="margin-top: 20px;">
-        <div class="card-body">
-          <form method="post" th:action="@{/admin/create-logo}" th:object="${logo}" enctype="multipart/form-data">
-   
-			<input type="hidden" th:field="${logo.logo.id}"/>
+  <a th:href="@{/admin/add-slider}"><button style="margin-top: 20px;" type="button" class="btn btn-primary btn-lg">Add Slider</button></a>
 
-            <div class="row mb-3">
-              <label class="col-sm-2 col-form-label" for="basic-default-name">Title</label>
-              <div class="col-sm-10">
-                <input type="text" class="form-control" id="basic-default-name" placeholder="Title of logo" th:field="${logo.logo.title}" oninput="validateFeild(this)" required/>
-              </div>
-            </div>
-
-            <div class="row mb-3">
-              <label class="col-sm-2 col-form-label" for="images">Image</label>
-              <div class="col-sm-10">
-                <input type="file" class="form-control" id="basic-default-name images" th:field="${logo.bannerFile}" data-target-index="1" accept="image/*" required/>
-              </div>
-            </div>
-
-          <!--  <div class="row mb-3">
-              <label class="col-sm-2 col-form-label" for="basic-default-name">Category</label>
-              <div class="col-sm-10">
-                <select class="form-control border border-primary" id="basic-default-name" name="category">
-                  
-                </select><br>
-              </div>
-            </div>-->
-
-            <div class="row justify-content-end">
-              <div class="col-sm-10">
-                <button type="submit" class="btn btn-primary">Add Logo</button>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
+  <!-- Basic Bootstrap Table -->
+  <div class="card" style="margin-top: 20px;">
+    <h5 class="card-header">Sliders</h5>
+    <div class="table-responsive text-nowrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Slider image</th>
+            <th>Small title</th>
+            <th>Title</th>
+            <th>action</th>
+          </tr>
+        </thead>
+		<tbody class="table-border-bottom-0">
+			<tr th:each="slide : ${slider}" class="table_row">
+				<td>
+				  <div class="row">
+				    <div class="col-4">
+				      <img th:src="${slide.imageBanner}" alt="" class="img-click" style="width: 115px; height: 60px;">
+				    </div>
+				  </div>
+				</td>
+			    <td th:text="${slide.smallTitle}"></td>
+				<td th:text="${slide.title}"></td>
+				<td>
+			       <a class="dropdown-item" th:href="@{'/admin/edit-slider/'+${slide.id}}"><i class="bx bx-edit-alt me-2"></i> Edit</a>
+			       <a class="dropdown-item" th:href="@{'/admin/delete-slider/'+${slide.id}}"><i class="bx bx-trash me-2"></i> Delete</a>
+			    </td>
+			</tr>
+		  </tbody>
+      </table>
     </div>
-    <!-- Basic with Icons -->
+  </div>
+  <!--/ Basic Bootstrap Table -->
+  <!-- Display products here -->
+
+  <!-- Pagination controls -->
+  <div class="pagination" style="margin-top: 15px;">
+
+    
+
   </div>
 </div>
 <!-- / Content -->
@@ -165,16 +194,6 @@
 
 <!-- Place this tag in your head or just before your close body tag. -->
 <script async defer src="https://buttons.github.io/buttons.js"></script>
-
-<script>
-  function validateFeild(input) {
-    // Remove spaces at the beginning
-    input.value = input.value.replace(/^\s+/g, '');
-
-    // Allow only letters, commas, and full stops
-    input.value = input.value.replace(/[^A-Za-z0-9,.\s]/g, '');
-  }
-</script>
 
 <script>
   document.addEventListener("DOMContentLoaded", function() {

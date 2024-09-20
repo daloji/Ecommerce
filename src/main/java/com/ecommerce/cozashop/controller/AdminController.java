@@ -24,6 +24,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.ecommerce.cozashop.model.Address;
 import com.ecommerce.cozashop.model.Banner;
 import com.ecommerce.cozashop.model.BannerForm;
+import com.ecommerce.cozashop.model.Block;
+import com.ecommerce.cozashop.model.BlockForm;
 import com.ecommerce.cozashop.model.DeliveryStatus;
 import com.ecommerce.cozashop.model.ImageProduct;
 import com.ecommerce.cozashop.model.Logo;
@@ -36,8 +38,11 @@ import com.ecommerce.cozashop.model.ProductForm;
 import com.ecommerce.cozashop.model.ProductItem;
 import com.ecommerce.cozashop.model.Role;
 import com.ecommerce.cozashop.model.ShopOrder;
+import com.ecommerce.cozashop.model.Slider;
+import com.ecommerce.cozashop.model.SliderForm;
 import com.ecommerce.cozashop.model.User;
 import com.ecommerce.cozashop.service.BannerService;
+import com.ecommerce.cozashop.service.BlockService;
 import com.ecommerce.cozashop.service.FileStorageService;
 import com.ecommerce.cozashop.service.LogoService;
 import com.ecommerce.cozashop.service.OrderLineService;
@@ -45,6 +50,7 @@ import com.ecommerce.cozashop.service.ProductCategoryService;
 import com.ecommerce.cozashop.service.ProductItemService;
 import com.ecommerce.cozashop.service.RoleService;
 import com.ecommerce.cozashop.service.ShopOrderService;
+import com.ecommerce.cozashop.service.SliderService;
 import com.ecommerce.cozashop.service.UserService;
 
 @Controller
@@ -76,7 +82,13 @@ public class AdminController {
 	
 	@Autowired
 	LogoService logoService;
-
+	
+	@Autowired
+	SliderService sliderService;
+	
+	@Autowired
+	BlockService blockService;
+	
 
 	@GetMapping("/admin")
 	public String showAdmin(Model model) {
@@ -102,6 +114,15 @@ public class AdminController {
 		ProductCategory productCategory = new ProductCategory();
 		model.addAttribute("category", productCategory);
 		return "admin/addCategory";
+	}
+
+	
+	
+	@GetMapping("/admin/add-slider")
+	public String showAddSlider(Model model) {
+		SliderForm sliderForm = new SliderForm();
+		model.addAttribute("sliderForm", sliderForm);
+		return "admin/addSlider";
 	}
 
 	@GetMapping("/admin/product")
@@ -144,6 +165,17 @@ public class AdminController {
 		return "admin/users";
 	}
 
+	
+	
+	@GetMapping("/admin/slider")
+	public String showSlider(Model model) {
+		Slider slider = sliderService.findAllSlider();
+		if(nonNull(slider)) {
+			model.addAttribute("slider", slider);
+		}
+
+		return "admin/slider";
+	}
 
 
 	@GetMapping("/admin/dashboard")
@@ -209,6 +241,13 @@ public class AdminController {
 		}
 		return "admin/product";
 	}
+	
+	
+	@GetMapping("/admin/delete-logo/{id}")
+	public String deleteLogo(@PathVariable(name = "id") int id,Model model) {
+		logoService.delete(id);
+		return "admin/dashboard";
+	}
 
 	@GetMapping("/admin/edit-product/{id}")
 	public String editProduct(@PathVariable(name = "id") Long id,Model model) {
@@ -238,7 +277,21 @@ public class AdminController {
 		return "admin/dashboard";
 	}
 
-
+	@PostMapping("/admin/create-slider")
+	public String showCreateSlider(@ModelAttribute SliderForm sliderForm,
+			Model model) {
+		if(nonNull(sliderForm.getBannerFile())) {
+			Slider slider = sliderForm.getSlider();
+			MultipartFile bannerFile = sliderForm.getBannerFile();
+			if(nonNull(bannerFile)) {
+				String file = fileStorage.saveFile(bannerFile);
+				slider.setImageBanner(file);
+			}
+			
+			sliderService.save(slider);
+		}
+		return "admin/dashboard";
+	}
 	
 	@PostMapping("/admin/create-logo")
 	public String createAdmin(@ModelAttribute LogoForm logoform,
@@ -267,6 +320,15 @@ public class AdminController {
 		List<Role> listRole = roleService.getRoles();
 		model.addAttribute("listRole", listRole);
 		return "admin/editUser";
+	}
+	
+	@GetMapping("/admin/edit-logo/{id}")
+	public String editLogo(@PathVariable("id") Integer id,Model model) {
+	   Logo logo = logoService.getLogo();
+	   LogoForm logoform =new LogoForm();
+	   logoform.setLogo(logo);
+	   model.addAttribute("logo", logoform);
+		return "admin/addLogo";
 	}
 
 	@PostMapping("/admin/edit-user")
@@ -380,7 +442,24 @@ public class AdminController {
 
 		return "admin/dashboard";
 	}
+	
 
+	@GetMapping("/admin/edit-slider/{id}")
+	public String showEditSlader(@PathVariable(name = "id") Integer id,Model model) {
+		
+		Slider slider = sliderService.findSliderById(id);
+		SliderForm sliderForm = new SliderForm();
+		sliderForm.setSlider(slider);
+		model.addAttribute("sliderForm", sliderForm);
+		return "admin/addSlider";
+	}
+	
+
+	@GetMapping("/admin/delete-slider/{id}")
+	public String deleteSlider(@PathVariable(name = "id") Integer id) {
+		 sliderService.delete(id);
+		return "redirect:/admin/slider";
+	}
 
 	@GetMapping("/admin/banner")
 	public String showBanner(Model model) {
@@ -501,4 +580,47 @@ public class AdminController {
 		}
 		return "admin/order-line";
 	}
+	
+	
+	
+
+	@GetMapping("/admin/block")
+	public String showBlock(Model model) {
+		List<Block> listBock = blockService.findAllBlock();
+		model.addAttribute("listBock", listBock); 
+		return "admin/block";
+	}
+	
+	@GetMapping("/admin/add-block")
+	public String showAddBlock(Model model) {
+		Block block = new Block();
+		BlockForm blockForm = new BlockForm();
+		blockForm.setBlock(block);
+		model.addAttribute("block", blockForm); 
+		return "admin/addBlock";
+	}
+	
+	@PostMapping("/admin/create-block")
+	public String createBlock(BlockForm blocForm ,Model model) {
+		Block block = blocForm.getBlock();
+		MultipartFile bannerFile = blocForm.getBlockFile();
+		if(nonNull(bannerFile)) {
+			String file = fileStorage.saveFile(bannerFile);
+			block.setImageBanner(file);
+		}
+		blockService.addBlock(block);
+		return "admin/dashboard";
+	}
+	
+	@GetMapping("/admin/edit-block/{id}")
+	public String editBlock(@PathVariable(name = "id") Integer id,Model model) {
+		
+		Block block = blockService.findBlockById(id);
+		BlockForm blockForm = new BlockForm();
+		blockForm.setBlock(block);
+		model.addAttribute("block", blockForm);
+		
+		return "admin/addBlock";
+	}
+	
 }
