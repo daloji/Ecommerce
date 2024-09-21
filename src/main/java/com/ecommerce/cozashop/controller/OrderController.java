@@ -54,16 +54,23 @@ public class OrderController {
 
 	@Autowired
 	private StripService stripService;
-	
+
 	@Autowired
 	private MessageSource messageSource;
-	
+
 	@Autowired
 	private PdfGeneratorService pdfGenaratorService;
 
+	@Autowired
+	private LogoService logoService;
+
+
 	@GetMapping("/check-out")
 	public String show(Model model) {
-
+		Logo logo = logoService.getLogo();
+		LogoForm logoform = new LogoForm();
+		logoform.setLogo(logo);
+		model.addAttribute("logo", logoform);
 		Authentication authentification = SecurityContextHolder.getContext().getAuthentication();
 		if(nonNull(authentification) && !( authentification instanceof AnonymousAuthenticationToken)) {
 			User user = (User) authentification.getPrincipal();
@@ -108,7 +115,7 @@ public class OrderController {
 				}
 				mapProductQty.put(productItem, cartItem.getQty());
 			}
-			
+
 			if(mapError.isEmpty()) {
 				ShopOrder shopOrder = new ShopOrder();
 				shopOrder.setOrder_date(LocalDate.now());
@@ -134,11 +141,11 @@ public class OrderController {
 					orderLine.setStatus(DeliveryStatus.PROCESSING);
 					// Add cart item -> order line
 					orderLineService.createOrderLine(orderLine);
-					
+
 					ProductItem productItem = c.getItem();
 					productItem.setProduct_sell(c.getQty());
 					productItemService.save(productItem);
-					
+
 					// Remove cart item
 					cartItemService.removeCartItem(c);
 					System.out.println("Success");
@@ -152,7 +159,7 @@ public class OrderController {
 					error = error + "\""+entry.getKey().getProduct_id().getProduct_name()+"\"" + "    "+ entry.getValue() + "\n";
 				}
 				model.addAttribute("error", error);
-				
+
 				user.setId(userService.getIdUserByEmail(user.getEmail()));
 				cartList = cartItemService.getAllProductCartWithUser(user.getId());
 				double total = cartItemService.getTotal(cartList);
@@ -161,10 +168,10 @@ public class OrderController {
 				model.addAttribute("countCart", cartList.size());
 				return new ModelAndView("shopping-cart");
 			}
-			
-			
-		
-	
+
+
+
+
 		}else {
 			return null;
 		}

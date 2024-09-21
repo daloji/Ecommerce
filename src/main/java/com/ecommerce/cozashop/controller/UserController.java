@@ -28,11 +28,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ecommerce.cozashop.model.Address;
 import com.ecommerce.cozashop.model.CartItem;
+import com.ecommerce.cozashop.model.Logo;
+import com.ecommerce.cozashop.model.LogoForm;
 import com.ecommerce.cozashop.model.UpdateUser;
 import com.ecommerce.cozashop.model.User;
 import com.ecommerce.cozashop.service.CartItemService;
 import com.ecommerce.cozashop.service.CookieService;
 import com.ecommerce.cozashop.service.EmailService;
+import com.ecommerce.cozashop.service.LogoService;
 import com.ecommerce.cozashop.service.UserService;
 
 import jakarta.servlet.http.Cookie;
@@ -60,6 +63,9 @@ public class UserController {
 
 	@Autowired
 	private MessageSource messageSource;
+	
+	@Autowired
+	private LogoService logoService;
 
 	
 	@GetMapping("/confirm-account/{email}")
@@ -98,7 +104,10 @@ public class UserController {
 		model.addAttribute("user", new User());
 		Cookie cookieEmail = cookieService.readCookie("email");
 		Cookie cookiePasswdId = cookieService.readCookie("password");
-
+		Logo logo = logoService.getLogo();
+		LogoForm logoForm = new LogoForm();
+		logoForm.setLogo(logo);
+		model.addAttribute("logo", logoForm);
 		if (cookieEmail != null) {
 			String email = cookieEmail.getValue();
 			String passwd = cookiePasswdId.getValue();
@@ -186,6 +195,10 @@ public class UserController {
 
 	@GetMapping("/my-account")
 	public String showAccount(Model model) {
+		Logo logo = logoService.getLogo();
+		LogoForm logoForm = new LogoForm();
+		logoForm.setLogo(logo);
+		model.addAttribute("logo", logoForm);
 		Authentication authentification = SecurityContextHolder.getContext().getAuthentication();
 		if(nonNull(authentification) && !( authentification instanceof AnonymousAuthenticationToken)) {
 			User user = (User) authentification.getPrincipal();
@@ -198,21 +211,6 @@ public class UserController {
 		return "account/my-account";
 	}
 
-
-	@GetMapping("/update-password")
-	public String updatePassword(Model model) {
-		Authentication authentification = SecurityContextHolder.getContext().getAuthentication();
-		if(nonNull(authentification) && !( authentification instanceof AnonymousAuthenticationToken)) {
-			return "account/update-password";
-		}else {
-			return "index";	
-		}
-	}
-
-
-	
-
-	
 	@PostMapping("/update-user")
 	public String postUser(@ModelAttribute UpdateUser updateuser) {
 		Authentication authentification = SecurityContextHolder.getContext().getAuthentication();

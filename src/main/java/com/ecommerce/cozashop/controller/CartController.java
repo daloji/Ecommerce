@@ -18,9 +18,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ecommerce.cozashop.model.CartItem;
+import com.ecommerce.cozashop.model.Logo;
+import com.ecommerce.cozashop.model.LogoForm;
 import com.ecommerce.cozashop.model.ProductItem;
 import com.ecommerce.cozashop.model.User;
 import com.ecommerce.cozashop.service.CartItemService;
+import com.ecommerce.cozashop.service.LogoService;
 import com.ecommerce.cozashop.service.ProductItemService;
 import com.ecommerce.cozashop.service.ProductService;
 import com.ecommerce.cozashop.service.StripService;
@@ -48,10 +51,16 @@ public class CartController {
 
 	@Autowired
 	private StripService stripService;
+	
+	@Autowired
+	private LogoService logoService;
 
 	@GetMapping("/shopping-cart")
 	public ModelAndView  show(Model model) {
-
+		Logo logo = logoService.getLogo();
+		LogoForm logoForm = new LogoForm();
+		logoForm.setLogo(logo);
+		model.addAttribute("logo", logoForm);
 		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		if(nonNull(user)) {
 			user.setId(userService.getIdUserByEmail(user.getEmail()));

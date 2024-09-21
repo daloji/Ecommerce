@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.ecommerce.cozashop.model.ImageProduct;
 import com.ecommerce.cozashop.model.Logo;
+import com.ecommerce.cozashop.model.LogoForm;
 import com.ecommerce.cozashop.model.ProductItem;
 import com.ecommerce.cozashop.model.ProductSize;
 import com.ecommerce.cozashop.service.ImageProductService;
@@ -46,10 +47,9 @@ public class ProductController {
     @GetMapping("/product")
     public String showProduct(Model model) {
     	Logo logo = logoService.getLogo();
-		model.addAttribute("logo", logo);
-		if(isNull(logo)) {
-			logo = new Logo();
-		}
+    	LogoForm logoform = new LogoForm();
+    	logoform.setLogo(logo);
+		model.addAttribute("logo", logoform);
         model.addAttribute("product_list", productService.getAllProduct());
         model.addAttribute("product_item_list", productItemService.getProductItems());
         return "product";

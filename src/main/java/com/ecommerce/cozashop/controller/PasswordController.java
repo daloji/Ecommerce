@@ -19,8 +19,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.ecommerce.cozashop.model.Logo;
+import com.ecommerce.cozashop.model.LogoForm;
 import com.ecommerce.cozashop.model.PasswordResetToken;
 import com.ecommerce.cozashop.model.User;
+import com.ecommerce.cozashop.service.LogoService;
 import com.ecommerce.cozashop.service.PasswordService;
 import com.ecommerce.cozashop.service.PasswordTokenService;
 import com.ecommerce.cozashop.service.UserService;
@@ -49,6 +52,9 @@ public class PasswordController {
 	
 	@Autowired
 	private BCryptPasswordEncoder encoder;
+	
+	@Autowired
+	private LogoService logoService;
 	
 	@GetMapping("/reset/password/{token}")
 	public String resetPassword(@PathVariable("token") String token,Model model) {
@@ -105,6 +111,10 @@ public class PasswordController {
 
 	@PostMapping("/update-password")
 	public String updatePasswordUser(@ModelAttribute User userUpdate, Model model) {
+		Logo logo = logoService.getLogo();
+		LogoForm logoForm = new LogoForm();
+		logoForm.setLogo(logo);
+		model.addAttribute("logo", logoForm);
 		Authentication authentification = SecurityContextHolder.getContext().getAuthentication();
 		if(nonNull(authentification) && !( authentification instanceof AnonymousAuthenticationToken)) {
 			User user = (User) authentification.getPrincipal();
@@ -120,5 +130,20 @@ public class PasswordController {
 			}
 		}
 		return "redirect:/";
+	}
+	
+	
+	@GetMapping("/update-password")
+	public String updatePassword(Model model) {
+		Logo logo = logoService.getLogo();
+		LogoForm logoForm = new LogoForm();
+		logoForm.setLogo(logo);
+		model.addAttribute("logo", logoForm);
+		Authentication authentification = SecurityContextHolder.getContext().getAuthentication();
+		if(nonNull(authentification) && !( authentification instanceof AnonymousAuthenticationToken)) {
+			return "account/update-password";
+		}else {
+			return "index";	
+		}
 	}
 }

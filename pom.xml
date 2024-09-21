@@ -25,12 +25,17 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
-	
-	<dependency>
-	  <groupId>com.stripe</groupId>
-	  <artifactId>stripe-java</artifactId>
-	  <version>26.3.0</version>
-	</dependency>
+        
+	    <dependency>
+	        <groupId>org.springframework.boot</groupId>
+	        <artifactId>spring-boot-starter-actuator</artifactId>
+	    </dependency>
+		
+		<dependency>
+		  <groupId>com.stripe</groupId>
+		  <artifactId>stripe-java</artifactId>
+		  <version>26.3.0</version>
+		</dependency>
 
 
         <dependency>
@@ -50,7 +55,13 @@
 			<groupId>org.thymeleaf.extras</groupId>
 			<artifactId>thymeleaf-extras-springsecurity6</artifactId>
 		</dependency>
-
+   
+	   <dependency>
+	      <groupId>com.itextpdf</groupId>
+	      <artifactId>itext7-core</artifactId>
+	      <version>7.0.4</version>
+	      <type>pom</type>
+	    </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -63,6 +74,8 @@
             <artifactId>mysql-connector-j</artifactId>
             <scope>runtime</scope>
         </dependency>
+        
+     
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>

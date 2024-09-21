@@ -26,16 +26,17 @@
 		</div>
 	</div>
 
-	<div class="wrap-menu-desktop" th:object="${logo}">
+	<div class="wrap-menu-desktop">
 		<nav class="limiter-menu-desktop container">
 
-			<th:block th:if="${logo.logo != null}"> 
-				<!-- Logo desktop -->
-				<a th:href="@{/home}" class="logo">
-					<img th:src="@{${logo.logo.imageLogo}}" alt="IMG-LOGO">
-				</a>
-			</th>
-		
+			<div th:object="${logo}">
+				<th:block th:if="${logo.logo != null}"> 
+					<!-- Logo desktop -->
+					<a th:href="@{/home}" class="logo">
+						<img th:src="@{${logo.logo.imageLogo}}" alt="IMG-LOGO">
+					</a>
+				</th>
+			</div>
 
 			<!-- Menu desktop -->
 			<div class="menu-desktop">
