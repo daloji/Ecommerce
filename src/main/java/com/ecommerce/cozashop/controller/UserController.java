@@ -3,8 +3,6 @@ package com.ecommerce.cozashop.controller;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
-import java.io.File;
-import java.nio.file.Files;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Locale;
@@ -19,7 +17,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ecommerce.cozashop.model.Address;
 import com.ecommerce.cozashop.model.CartItem;
+import com.ecommerce.cozashop.model.LoginImage;
+import com.ecommerce.cozashop.model.LoginImageForm;
 import com.ecommerce.cozashop.model.Logo;
 import com.ecommerce.cozashop.model.LogoForm;
 import com.ecommerce.cozashop.model.UpdateUser;
@@ -35,6 +34,7 @@ import com.ecommerce.cozashop.model.User;
 import com.ecommerce.cozashop.service.CartItemService;
 import com.ecommerce.cozashop.service.CookieService;
 import com.ecommerce.cozashop.service.EmailService;
+import com.ecommerce.cozashop.service.LoginImageService;
 import com.ecommerce.cozashop.service.LogoService;
 import com.ecommerce.cozashop.service.UserService;
 
@@ -66,6 +66,9 @@ public class UserController {
 	
 	@Autowired
 	private LogoService logoService;
+	
+	@Autowired
+	private LoginImageService loginImageService;
 
 	
 	@GetMapping("/confirm-account/{email}")
@@ -78,12 +81,12 @@ public class UserController {
 				logger.info("user account confirmation {} is enabled",email);
 				userService.updateAccount(user);
 				Locale locale = user.getLocal();
-				File file =  ResourceUtils.getFile("classpath:file/welcome-email.html");
+				//File file =  ResourceUtils.getFile("classpath:file/welcome-email.html");
+				String content = com.ecommerce.cozashop.config.ResourceUtils.getFileContent("file/welcome-email.html");
 				String preheader = messageSource.getMessage("label.init-preheader-welcome",null, locale);
-				String content = new String(Files.readAllBytes(file.toPath()));
+				//String content = new String(Files.readAllBytes(file.toPath()));
 				String subject = messageSource.getMessage("label.init-welcome-account",null, locale);
-				File fileCss = ResourceUtils.getFile("classpath:file/info.css");
-				String contentCss = new String(Files.readAllBytes(fileCss.toPath()));
+				String contentCss = com.ecommerce.cozashop.config.ResourceUtils.getFileContent("file/info.css");
 				String info1 = messageSource.getMessage("label.welcome-account-mail-1",null, locale);
 				String hello = messageSource.getMessage("label.hello",null, locale);
 				String bouton = messageSource.getMessage("label.sign-in",null, locale);
@@ -108,6 +111,11 @@ public class UserController {
 		LogoForm logoForm = new LogoForm();
 		logoForm.setLogo(logo);
 		model.addAttribute("logo", logoForm);
+		
+		LoginImage loginImage = loginImageService.getLoginImage();
+		LoginImageForm loginForm = new LoginImageForm();
+		loginForm.setLoginImage(loginImage);
+		model.addAttribute("loginForm", loginForm);
 		if (cookieEmail != null) {
 			String email = cookieEmail.getValue();
 			String passwd = cookiePasswdId.getValue();
@@ -142,7 +150,15 @@ public class UserController {
 	}
 
 	@GetMapping("/register")
-	public String showRegister() {
+	public String showRegister(Model model) {
+		Logo logo = logoService.getLogo();
+		LogoForm logoForm = new LogoForm();
+		logoForm.setLogo(logo);
+		model.addAttribute("logo", logoForm);
+		LoginImage loginImage = loginImageService.getLoginImage();
+		LoginImageForm loginForm = new LoginImageForm();
+		loginForm.setLoginImage(loginImage);
+		model.addAttribute("loginForm", loginForm);
 		return "account/register";
 	}
 
@@ -163,19 +179,16 @@ public class UserController {
 			} else {
 				user.setLocal(locale);
 				userService.registerAccount(user);
-				File file =  ResourceUtils.getFile("classpath:file/create-account-email.html");
+				String content = com.ecommerce.cozashop.config.ResourceUtils.getFileContent("file/create-account-email.html");
 				String preheader = messageSource.getMessage("label.init-preheader-account",null, locale);
-				String content = new String(Files.readAllBytes(file.toPath()));
 				String subject = messageSource.getMessage("label.init-create-account",null, locale);
-				File fileCss = ResourceUtils.getFile("classpath:file/info.css");
-				String contentCss = new String(Files.readAllBytes(fileCss.toPath()));
+				String contentCss = com.ecommerce.cozashop.config.ResourceUtils.getFileContent("file/info.css");
 				String info1 = messageSource.getMessage("label.create-account-mail-1",null, locale);
 				String info2 = messageSource.getMessage("label.create-account-mail-2",null, locale);
 				String mailboutton = messageSource.getMessage("label.create-account-mail-confirm",null, locale);
 				String greeting = messageSource.getMessage("label.hello",null, locale);
 				String regards = messageSource.getMessage("label.regards",null, locale);
 				content = MessageFormat.format(content,contentCss,preheader,greeting,info1,user.getEmail(),mailboutton,info2,regards);
-
 				emailService.sendSimpleMessage(user.getEmail(),subject,content); 
 				String info = messageSource.getMessage("label.info-create-account",null, locale);
 				model.addAttribute("info", info);

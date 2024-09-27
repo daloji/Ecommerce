@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.ecommerce.cozashop.model.ImageProduct;
+import com.ecommerce.cozashop.model.LoginImage;
+import com.ecommerce.cozashop.model.LoginImageForm;
 import com.ecommerce.cozashop.model.Logo;
 import com.ecommerce.cozashop.model.LogoForm;
 import com.ecommerce.cozashop.model.ProductItem;
@@ -65,8 +67,12 @@ public class ProductController {
 
     @GetMapping("/product-detail/{id}")
     public String showProductDetail(@PathVariable(name = "id") Long id, Model model) {
-        ProductItem productItem = productItemService.getOneProduct(id);
-       //Product product = productService.getProduct(id);
+
+    	Logo logo = logoService.getLogo();
+		LogoForm logoForm = new LogoForm();
+		logoForm.setLogo(logo);
+		model.addAttribute("logo", logoForm);
+    	ProductItem productItem = productItemService.getOneProduct(id);
         List<ProductSize> productSizeList = productSizeService.getAllSize(productItem.getId());
         List<String> strings = new ArrayList<>();
         List<ImageProduct> imageProducts = imageProductService.getAllImageById(productItem.getId());

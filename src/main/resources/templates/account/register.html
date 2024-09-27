@@ -45,48 +45,7 @@
 
 <!-- Header -->
 <header class="header-v4">
-  <!-- Header desktop -->
-  <div class="container-menu-desktop">
-    <!-- Topbar -->
-    <div class="top-bar">
-      <div class="content-topbar flex-sb-m h-full container">
-        <div class="left-top-bar">
-          Free shipping for standard order over $100
-        </div>
-      </div>
-    </div>
-
-    <div class="wrap-menu-desktop how-shadow1">
-      <nav class="limiter-menu-desktop container">
-
-        <!-- Logo desktop -->
-        <a th:href="@{/home}" class="logo">
-          <img th:src="@{/images/icons/logo-01.png}" alt="IMG-LOGO">
-        </a>
-
-        <!-- Menu desktop -->
-        <div class="menu-desktop">
-          <ul class="main-menu">
-            <li>
-              <a th:href="@{/home}">Home</a>
-            </li>
-
-            <li class="label1" data-label1="hot">
-              <a th:href="@{/product}">Shop</a>
-            </li>
-
-            <li>
-              <a th:href="@{/about}">About</a>
-            </li>
-
-            <li>
-              <a th:href="@{/contact}">Contact</a>
-            </li>
-          </ul>
-        </div>
-      </nav>
-    </div>
-  </div>
+	<div th:replace="fragments/bar-menu.html"/> 
 </header>
 
 <!-- Login Detail -->
@@ -95,8 +54,11 @@
     <div class="row justify-content-center">
       <div class="col-md-12 col-lg-10">
         <div class="wrap d-md-flex">
-          <div class="img" style="background-image: url(/../images/banner-02.jpg);">
-          </div>
+			<th:block th:if="${loginForm.loginImage != null}"> 
+				<div class="img" th:style="|background-image: url(${loginForm.loginImage.imageLogin});|"></div>   
+			</th:block>	
+         <!-- <div class="img" style="background-image: url(/../images/banner-02.jpg);">
+          </div> -->
           <div class="login-wrap p-4 p-md-5">
             <div class="d-flex">
               <div class="w-100">

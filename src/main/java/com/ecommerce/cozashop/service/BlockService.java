@@ -21,6 +21,10 @@ public class BlockService {
 	}
 
 	
+	public void deleteBlock(Integer id) {
+		blockRepo.deleteById(id);
+		
+	}
 	public List<Block> findAllBlock(){
 		List<Block> listBlock = blockRepo.findAll();
 		return listBlock;

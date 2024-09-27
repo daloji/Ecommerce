@@ -22,12 +22,12 @@ public class WebSecurityConfig {
 	private String[] authorizedURL = {"/","/index","/blog" ,"/blog-detail","/home","/login", "/product","/product-detail/*",
 			                         "/error", "/register","/forgot-password","/register-new",
 			                         "/add-to-cart/*/*/*","/add-to-cart/*/*","/confirm-account/*","/reset/password/*", "/update-password","/logout",
-			                         "/admin","/admin/sales-report","/admin/category","/admin/add-category",
+			                         "/admin","/admin/sales-report","/admin/category","/admin/add-category","/admin/addlogin",
 			                         "/admin/product","/admin/edit-category/*","/admin/add-product","/admin/delete-slider/*","/admin/edit-logo/*","/admin/delete-logo/*",
-			                         "/admin/banner","/admin/delete-category/*","/admin/delete-product/*","/admin/logo","/admin/add-logo","/admin/block","/admin/add-block",
+			                         "/admin/banner","admin/delete-block/*","/admin/delete-category/*","/admin/delete-product/*","/admin/logo","/admin/add-logo","/admin/block","/admin/add-block",
 			                          "/admin/add-banner","/admin/order","/admin/delete-banner/*","/actuator/health/*","/admin/slider","/admin/add-slider",
 			                          "/admin/edit-block/*","/admin/edit-slider/*", "/admin/edit-user/*","/admin/delete-user/*","/admin/users","admin/roles","admin/add-roles","admin/dashboard","/admin/product-inventory",
-			                         "/admin/order-line/*","/admin/order/action-update","/admin/order-to-deliver"};
+			                          "/admin/delete-login/*","/admin/order-line/*","/admin/order/action-update","/admin/order-to-deliver","/admin/add-login"};
 	
     @Autowired
     private UserService userService;
@@ -41,7 +41,7 @@ public class WebSecurityConfig {
 		http
 		.authorizeHttpRequests(authConfig -> {
 			authConfig.requestMatchers(HttpMethod.GET, authorizedURL).permitAll();
-			authConfig.requestMatchers(HttpMethod.POST,"/admin/create-block", "/admin/create-slider","/admin/create-logo","/admin/edit-user","/admin/create-banner","/admin/create-role","/admin/create-product","/admin/create-category","/admin/login","/reset/new-password","/register-new","/reset-password","/update-user").permitAll();
+			authConfig.requestMatchers(HttpMethod.POST,"/admin/create-login","/admin/create-block", "/admin/create-slider","/admin/create-logo","/admin/edit-user","/admin/create-banner","/admin/create-role","/admin/create-product","/admin/create-category","/admin/login","/reset/new-password","/register-new","/reset-password","/update-user").permitAll();
 			authConfig.anyRequest().authenticated();
 			/*authConfig.requestMatchers(HttpMethod.GET, "/user").hasRole("USER");
 			authConfig.requestMatchers(HttpMethod.GET, "/admin").hasRole("ADMIN");

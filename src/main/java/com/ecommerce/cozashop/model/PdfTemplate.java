@@ -307,6 +307,9 @@ public class PdfTemplate {
 		return invoiceName;
 	}
 	private Image createLogo() throws URISyntaxException, IOException {
+		
+		String content = com.ecommerce.cozashop.config.ResourceUtils.getFileContent("static/images/icons/logo-01.png");
+
 		Resource resource = resourceLoader.getResource("classpath:"+IMAGE_LOGO);
 		if(nonNull(resource)) {
 			File file = resource.getFile();

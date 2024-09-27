@@ -28,6 +28,8 @@ import com.ecommerce.cozashop.model.Block;
 import com.ecommerce.cozashop.model.BlockForm;
 import com.ecommerce.cozashop.model.DeliveryStatus;
 import com.ecommerce.cozashop.model.ImageProduct;
+import com.ecommerce.cozashop.model.LoginImage;
+import com.ecommerce.cozashop.model.LoginImageForm;
 import com.ecommerce.cozashop.model.Logo;
 import com.ecommerce.cozashop.model.LogoForm;
 import com.ecommerce.cozashop.model.OrderLine;
@@ -44,6 +46,7 @@ import com.ecommerce.cozashop.model.User;
 import com.ecommerce.cozashop.service.BannerService;
 import com.ecommerce.cozashop.service.BlockService;
 import com.ecommerce.cozashop.service.FileStorageService;
+import com.ecommerce.cozashop.service.LoginImageService;
 import com.ecommerce.cozashop.service.LogoService;
 import com.ecommerce.cozashop.service.OrderLineService;
 import com.ecommerce.cozashop.service.ProductCategoryService;
@@ -88,6 +91,9 @@ public class AdminController {
 	
 	@Autowired
 	BlockService blockService;
+	
+	@Autowired
+	LoginImageService loginImageService;
 	
 
 	@GetMapping("/admin")
@@ -623,4 +629,58 @@ public class AdminController {
 		return "admin/addBlock";
 	}
 	
+	
+	@GetMapping("/admin/delete-login/{id}")
+	public String deleteLogin(@PathVariable(name = "id") Integer id,Model model) {
+			loginImageService.delete(id);
+		LoginImage loginImage =	loginImageService.getLoginImage();
+		loginImage = loginImageService.getLoginImage();
+		LoginImageForm loginForm = new LoginImageForm();
+		loginForm.setLoginImage(loginImage);
+		model.addAttribute("loginForm", loginForm); 
+		return "admin/login";
+	}
+	
+	@GetMapping("/admin/delete-block/{id}")
+	public String deleteBlock(@PathVariable(name = "id") Integer id,Model model) {
+		blockService.deleteBlock(id);
+		List<Block> listBock = blockService.findAllBlock();
+		model.addAttribute("listBock", listBock); 
+		return "admin/block";
+	}
+	
+	@GetMapping("/admin/addlogin")
+	public String showAddlogin(Model model) {
+		LoginImage loginImage = loginImageService.getLoginImage();
+		LoginImageForm loginForm = new LoginImageForm();
+		loginForm.setLoginImage(loginImage);
+		model.addAttribute("loginForm", loginForm); 
+		return "admin/login";
+	}
+	
+	@GetMapping("/admin/add-login")
+	public String addlogin(Model model) {
+		LoginImage loginImage = loginImageService.getLoginImage();
+		LoginImageForm loginForm = new LoginImageForm();
+		loginForm.setLoginImage(loginImage);
+		model.addAttribute("loginForm", loginForm); 
+		return "admin/addLoging";
+	}
+	
+
+	@PostMapping("/admin/create-login")
+	public String createLogin(LoginImageForm loginForm ,Model model) {
+		LoginImage loginImage = loginForm.getLoginImage();
+		MultipartFile bannerFile = loginForm.getBannerFile();
+		if(nonNull(bannerFile)) {
+			String file = fileStorage.saveFile(bannerFile);
+			loginImage.setImageLogin(file);
+		}
+		loginImageService.addLoginImage(loginImage);
+		loginImage = loginImageService.getLoginImage();
+		loginForm = new LoginImageForm();
+		loginForm.setLoginImage(loginImage);
+		model.addAttribute("loginForm", loginForm); 
+		return "admin/login";
+	}
 }
