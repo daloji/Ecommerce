@@ -1,5 +1,7 @@
 package com.ecommerce.cozashop.service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,7 @@ public class PdfGeneratorService {
 				invoice.setFilename(mapentry.getValue());
 				invoice.setInvoiceId(mapentry.getKey());
 				invoice.setUser(user);
+				invoice.setOrder_date(LocalDate.now());
 				invoiceRepo.save(invoice);
 			}
 		}

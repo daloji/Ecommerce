@@ -15,9 +15,19 @@ public class InvoiceService {
 	@Autowired
 	private InvoiceRepo invoiceRepo;
 	
-	
-	
 	public List<Invoice> getIvoiceByUser(User user){
 		return invoiceRepo.findInvoice(user.getId());
+	}
+	
+	public List<Invoice> getListInvoice(){
+		return invoiceRepo.findAll();
+	}
+	
+	public Invoice getListInvoiceById(Long Id) {
+		return invoiceRepo.findInvoiceById(Id);
+	}
+	
+	public void deleteInvoice(Integer id) {
+		invoiceRepo.deleteById(id);
 	}
 }

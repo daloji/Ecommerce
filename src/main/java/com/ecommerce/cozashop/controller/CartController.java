@@ -2,6 +2,9 @@ package com.ecommerce.cozashop.controller;
 
 import static java.util.Objects.nonNull;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.json.JSONObject;
@@ -17,18 +20,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.ecommerce.cozashop.config.LocalDateTypeAdapter;
 import com.ecommerce.cozashop.model.CartItem;
 import com.ecommerce.cozashop.model.Logo;
 import com.ecommerce.cozashop.model.LogoForm;
 import com.ecommerce.cozashop.model.ProductItem;
 import com.ecommerce.cozashop.model.User;
 import com.ecommerce.cozashop.service.CartItemService;
+import com.ecommerce.cozashop.service.CookieService;
 import com.ecommerce.cozashop.service.LogoService;
 import com.ecommerce.cozashop.service.ProductItemService;
 import com.ecommerce.cozashop.service.ProductService;
 import com.ecommerce.cozashop.service.StripService;
 import com.ecommerce.cozashop.service.UserService;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -51,9 +59,12 @@ public class CartController {
 
 	@Autowired
 	private StripService stripService;
-	
+
 	@Autowired
 	private LogoService logoService;
+
+	@Autowired
+	private CookieService cookieService;
 
 	@GetMapping("/shopping-cart")
 	public ModelAndView  show(Model model) {
@@ -78,13 +89,13 @@ public class CartController {
 
 		return new ModelAndView("shopping-cart"); 
 	}
-	
+
 
 	@GetMapping("/add-to-cart/{id}/{qty}/{size}")
 	@ResponseBody
 	public Integer addToCart(@PathVariable(name = "id") Long id,
 			@PathVariable(name = "qty") Integer qty,@PathVariable(name = "size",required = false) String size) {
-		
+
 		//check if user is authenticated
 		Authentication authetication = SecurityContextHolder.getContext().getAuthentication();
 		if(nonNull(authetication) && !( authetication instanceof AnonymousAuthenticationToken)) {
@@ -107,21 +118,30 @@ public class CartController {
 			session.removeAttribute("totalCart");
 			session.setAttribute("totalCart", list.size());
 			return list.size();
-			
+
 		}else {
 			ProductItem product = new ProductItem();
 			CartItem cartItem = new CartItem();
 			product.setId(id);
 			cartItem.setQty(qty);
 			cartItem.setItem(product);
+			Cookie cookie = cookieService.readCookie("cartItem");
+			if(nonNull(cookie)) {
+
+			}
+			/*
+			Cookie cookie = cookieService.readCookie("JSESSIONID");
+			String sessionId = cookie.getValue();
+
 			session.removeAttribute("totalCart");
 			session.setAttribute("totalCart", 1);
+			 */
 			return 1;	
-			
+
 		}
-		
+
 	}
-	
+
 	@GetMapping("/add-to-cart/{id}/{qty}")
 	@ResponseBody
 	public Integer addToCartnoSize(@PathVariable(name = "id") Long id,
@@ -147,17 +167,37 @@ public class CartController {
 			session.removeAttribute("totalCart");
 			session.setAttribute("totalCart", list.size());
 			return list.size();
-			
+
 		}else {
+			 GsonBuilder builder = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateTypeAdapter());
+			//new GsonBuilder().setPrettyPrinting()
+            //.excludeFieldsWithoutExposeAnnotation()
+            //.create();
+			final Gson gson = builder.create();
+			List<CartItem> listCartItem = new ArrayList<CartItem>();
 			ProductItem product = new ProductItem();
 			CartItem cartItem = new CartItem();
 			product.setId(id);
 			cartItem.setQty(qty);
 			cartItem.setItem(product);
+			Cookie cookie = cookieService.readCookie("listCart");
+			if(nonNull(cookie)) {
+				String listCart = cookie.getValue();
+				CartItem[] array = gson.fromJson(listCart, CartItem[].class);
+				List<CartItem> listOldCartItem = Arrays.asList(array);
+				listCartItem.addAll(listOldCartItem);
+				listCartItem.add(cartItem);
+			}else {
+				listCartItem.add(cartItem);
+			}
+			String data = gson.toJson(listCartItem);
+			cookieService.deleteCookie("listCart");
+			cookieService.create("listCart", data,7);
+
 			session.removeAttribute("totalCart");
-			session.setAttribute("totalCart", 1);
-			return 1;	
-			
+			session.setAttribute("totalCart", listCartItem.size());
+			return listCartItem.size();	
+
 		}
 	}
 

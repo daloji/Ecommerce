@@ -1,10 +1,14 @@
 package com.ecommerce.cozashop.controller;
 
-import com.ecommerce.cozashop.model.*;
-import com.ecommerce.cozashop.service.*;
-import com.stripe.model.checkout.Session;
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 
-import jakarta.servlet.http.HttpSession;
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -18,15 +22,27 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import static java.util.Objects.isNull;
-import static java.util.Objects.nonNull;
+import com.ecommerce.cozashop.model.Address;
+import com.ecommerce.cozashop.model.CartItem;
+import com.ecommerce.cozashop.model.DeliveryStatus;
+import com.ecommerce.cozashop.model.Logo;
+import com.ecommerce.cozashop.model.LogoForm;
+import com.ecommerce.cozashop.model.OrderLine;
+import com.ecommerce.cozashop.model.PaymentStatus;
+import com.ecommerce.cozashop.model.ProductItem;
+import com.ecommerce.cozashop.model.ShopOrder;
+import com.ecommerce.cozashop.model.User;
+import com.ecommerce.cozashop.service.CartItemService;
+import com.ecommerce.cozashop.service.LogoService;
+import com.ecommerce.cozashop.service.OrderLineService;
+import com.ecommerce.cozashop.service.PdfGeneratorService;
+import com.ecommerce.cozashop.service.ProductItemService;
+import com.ecommerce.cozashop.service.ProductService;
+import com.ecommerce.cozashop.service.ShopOrderService;
+import com.ecommerce.cozashop.service.StripService;
+import com.ecommerce.cozashop.service.UserService;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class OrderController {
@@ -101,7 +117,6 @@ public class OrderController {
 			User user = (User) authentification.getPrincipal();
 			List<CartItem> cartList = cartItemService.getAllProductCartWithUser(user.getId());
 			Locale locale = LocaleContextHolder.getLocale();
-			String info = messageSource.getMessage("label.reset-password-info",null, locale);
 			//check quantity
 			for(CartItem cartItem:cartList) {
 				ProductItem productItem = cartItem.getItem();
@@ -139,6 +154,7 @@ public class OrderController {
 					orderLine.setQty(c.getQty());
 					orderLine.setPrice(c.getQty() * c.getItem().getPrice());
 					orderLine.setStatus(DeliveryStatus.PROCESSING);
+					orderLine.setOrder_date(LocalDate.now());
 					// Add cart item -> order line
 					orderLineService.createOrderLine(orderLine);
 
@@ -152,6 +168,13 @@ public class OrderController {
 				}
 				shopOrder.setStatus(PaymentStatus.ACCEPT);
 				shopOrderService.save(shopOrder);
+				cartList = cartItemService.getAllProductCartWithUser(user.getId());
+				double total = cartItemService.getTotal(cartList);
+				session.removeAttribute("totalCart");
+				session.setAttribute("totalCart", cartList.size());
+				model.addAttribute("cart_item", cartList);
+				model.addAttribute("total", total);
+				model.addAttribute("countCart", cartList.size());
 				return new ModelAndView("redirect:/shopping-cart");
 			}else {
 				String error = "";

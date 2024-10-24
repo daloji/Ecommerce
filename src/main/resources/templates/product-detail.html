@@ -458,6 +458,7 @@
 					      url: `/add-to-cart/${prodId}/${qty.value}/${size}`,
 						  success: function (data) {
 								$('.count-cart').attr("data-notify", data);
+								window.location.href = '/';
 							}
 						})
 				}else{
@@ -465,12 +466,13 @@
 						url: `/add-to-cart/${prodId}/${qty.value}`,
 						success: function (data) {
 								$('.count-cart').attr("data-notify", data);
+								window.location.href = '/';
 						}
 					})
 				}
 			
-					swal(nameProduct,"is added to cart !", "success");
-
+					//swal(nameProduct,"is added to cart !", "success");
+					
 			
 			});
 		});

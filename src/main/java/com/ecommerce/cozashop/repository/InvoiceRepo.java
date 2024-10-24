@@ -14,6 +14,9 @@ public interface InvoiceRepo extends JpaRepository<Invoice, Integer> {
 
 	@Query("select n from Invoice n where n.user.id=?1")
     List<Invoice> findInvoice(Long id);
+	
+    Invoice findInvoiceById(Long id);
+    
 	/*
     @Query("select n from CartItem n where n.user.id=?1")
     List<CartItem> findCart(Long id);

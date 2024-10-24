@@ -14,5 +14,8 @@ public interface OrderLineRepo extends JpaRepository<OrderLine, Long> {
 	@Query("select od from OrderLine od where od.shopOrder.id=?1")
 	List<OrderLine> findAllOrderLineByShopId(Long id);
 	
+	@Query("select od from OrderLine od where od.shopOrder.user.id=?1")
+	List<OrderLine> findAllOrderLineByUserId(Long id);
+	
 	OrderLine findOrderLineById(Long id);
 }

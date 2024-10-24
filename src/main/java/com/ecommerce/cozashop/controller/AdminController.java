@@ -3,6 +3,10 @@ package com.ecommerce.cozashop.controller;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
@@ -11,6 +15,9 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +34,10 @@ import com.ecommerce.cozashop.model.BannerForm;
 import com.ecommerce.cozashop.model.Block;
 import com.ecommerce.cozashop.model.BlockForm;
 import com.ecommerce.cozashop.model.DeliveryStatus;
+import com.ecommerce.cozashop.model.Icon;
+import com.ecommerce.cozashop.model.IconForm;
 import com.ecommerce.cozashop.model.ImageProduct;
+import com.ecommerce.cozashop.model.Invoice;
 import com.ecommerce.cozashop.model.LoginImage;
 import com.ecommerce.cozashop.model.LoginImageForm;
 import com.ecommerce.cozashop.model.Logo;
@@ -46,6 +56,8 @@ import com.ecommerce.cozashop.model.User;
 import com.ecommerce.cozashop.service.BannerService;
 import com.ecommerce.cozashop.service.BlockService;
 import com.ecommerce.cozashop.service.FileStorageService;
+import com.ecommerce.cozashop.service.IconService;
+import com.ecommerce.cozashop.service.InvoiceService;
 import com.ecommerce.cozashop.service.LoginImageService;
 import com.ecommerce.cozashop.service.LogoService;
 import com.ecommerce.cozashop.service.OrderLineService;
@@ -82,19 +94,24 @@ public class AdminController {
 
 	@Autowired
 	OrderLineService orderLineService;
-	
+
 	@Autowired
 	LogoService logoService;
-	
+
 	@Autowired
 	SliderService sliderService;
-	
+
 	@Autowired
 	BlockService blockService;
-	
+
 	@Autowired
 	LoginImageService loginImageService;
-	
+
+	@Autowired
+	IconService iconService;
+
+	@Autowired
+	InvoiceService invoiceService;
 
 	@GetMapping("/admin")
 	public String showAdmin(Model model) {
@@ -122,8 +139,8 @@ public class AdminController {
 		return "admin/addCategory";
 	}
 
-	
-	
+
+
 	@GetMapping("/admin/add-slider")
 	public String showAddSlider(Model model) {
 		SliderForm sliderForm = new SliderForm();
@@ -140,8 +157,8 @@ public class AdminController {
 		}
 		return "admin/product";
 	}
-	
-	
+
+
 	@GetMapping("/admin/logo")
 	public String showLogo(Model model) {
 		Logo logo = logoService.getLogo();
@@ -171,8 +188,8 @@ public class AdminController {
 		return "admin/users";
 	}
 
-	
-	
+
+
 	@GetMapping("/admin/slider")
 	public String showSlider(Model model) {
 		Slider slider = sliderService.findAllSlider();
@@ -247,8 +264,8 @@ public class AdminController {
 		}
 		return "admin/product";
 	}
-	
-	
+
+
 	@GetMapping("/admin/delete-logo/{id}")
 	public String deleteLogo(@PathVariable(name = "id") int id,Model model) {
 		logoService.delete(id);
@@ -293,12 +310,12 @@ public class AdminController {
 				String file = fileStorage.saveFile(bannerFile);
 				slider.setImageBanner(file);
 			}
-			
+
 			sliderService.save(slider);
 		}
 		return "admin/dashboard";
 	}
-	
+
 	@PostMapping("/admin/create-logo")
 	public String createAdmin(@ModelAttribute LogoForm logoform,
 			Model model) {
@@ -309,7 +326,7 @@ public class AdminController {
 				String file = fileStorage.saveFile(bannerFile);
 				logo.setImageLogo(file);
 			}
-			
+
 			logoService.addLogo(logo);
 		}
 		return "admin/dashboard";
@@ -327,13 +344,13 @@ public class AdminController {
 		model.addAttribute("listRole", listRole);
 		return "admin/editUser";
 	}
-	
+
 	@GetMapping("/admin/edit-logo/{id}")
 	public String editLogo(@PathVariable("id") Integer id,Model model) {
-	   Logo logo = logoService.getLogo();
-	   LogoForm logoform =new LogoForm();
-	   logoform.setLogo(logo);
-	   model.addAttribute("logo", logoform);
+		Logo logo = logoService.getLogo();
+		LogoForm logoform =new LogoForm();
+		logoform.setLogo(logo);
+		model.addAttribute("logo", logoform);
 		return "admin/addLogo";
 	}
 
@@ -448,22 +465,22 @@ public class AdminController {
 
 		return "admin/dashboard";
 	}
-	
+
 
 	@GetMapping("/admin/edit-slider/{id}")
 	public String showEditSlader(@PathVariable(name = "id") Integer id,Model model) {
-		
+
 		Slider slider = sliderService.findSliderById(id);
 		SliderForm sliderForm = new SliderForm();
 		sliderForm.setSlider(slider);
 		model.addAttribute("sliderForm", sliderForm);
 		return "admin/addSlider";
 	}
-	
+
 
 	@GetMapping("/admin/delete-slider/{id}")
 	public String deleteSlider(@PathVariable(name = "id") Integer id) {
-		 sliderService.delete(id);
+		sliderService.delete(id);
 		return "redirect:/admin/slider";
 	}
 
@@ -586,9 +603,9 @@ public class AdminController {
 		}
 		return "admin/order-line";
 	}
-	
-	
-	
+
+
+
 
 	@GetMapping("/admin/block")
 	public String showBlock(Model model) {
@@ -596,7 +613,7 @@ public class AdminController {
 		model.addAttribute("listBock", listBock); 
 		return "admin/block";
 	}
-	
+
 	@GetMapping("/admin/add-block")
 	public String showAddBlock(Model model) {
 		Block block = new Block();
@@ -605,7 +622,7 @@ public class AdminController {
 		model.addAttribute("block", blockForm); 
 		return "admin/addBlock";
 	}
-	
+
 	@PostMapping("/admin/create-block")
 	public String createBlock(BlockForm blocForm ,Model model) {
 		Block block = blocForm.getBlock();
@@ -617,22 +634,22 @@ public class AdminController {
 		blockService.addBlock(block);
 		return "admin/dashboard";
 	}
-	
+
 	@GetMapping("/admin/edit-block/{id}")
 	public String editBlock(@PathVariable(name = "id") Integer id,Model model) {
-		
+
 		Block block = blockService.findBlockById(id);
 		BlockForm blockForm = new BlockForm();
 		blockForm.setBlock(block);
 		model.addAttribute("block", blockForm);
-		
+
 		return "admin/addBlock";
 	}
-	
-	
+
+
 	@GetMapping("/admin/delete-login/{id}")
 	public String deleteLogin(@PathVariable(name = "id") Integer id,Model model) {
-			loginImageService.delete(id);
+		loginImageService.delete(id);
 		LoginImage loginImage =	loginImageService.getLoginImage();
 		loginImage = loginImageService.getLoginImage();
 		LoginImageForm loginForm = new LoginImageForm();
@@ -640,7 +657,7 @@ public class AdminController {
 		model.addAttribute("loginForm", loginForm); 
 		return "admin/login";
 	}
-	
+
 	@GetMapping("/admin/delete-block/{id}")
 	public String deleteBlock(@PathVariable(name = "id") Integer id,Model model) {
 		blockService.deleteBlock(id);
@@ -648,7 +665,7 @@ public class AdminController {
 		model.addAttribute("listBock", listBock); 
 		return "admin/block";
 	}
-	
+
 	@GetMapping("/admin/addlogin")
 	public String showAddlogin(Model model) {
 		LoginImage loginImage = loginImageService.getLoginImage();
@@ -657,7 +674,7 @@ public class AdminController {
 		model.addAttribute("loginForm", loginForm); 
 		return "admin/login";
 	}
-	
+
 	@GetMapping("/admin/add-login")
 	public String addlogin(Model model) {
 		LoginImage loginImage = loginImageService.getLoginImage();
@@ -666,7 +683,7 @@ public class AdminController {
 		model.addAttribute("loginForm", loginForm); 
 		return "admin/addLoging";
 	}
-	
+
 
 	@PostMapping("/admin/create-login")
 	public String createLogin(LoginImageForm loginForm ,Model model) {
@@ -682,5 +699,70 @@ public class AdminController {
 		loginForm.setLoginImage(loginImage);
 		model.addAttribute("loginForm", loginForm); 
 		return "admin/login";
+	}
+
+	@GetMapping("/admin/icon")
+	public String showIcon(Model model) {
+		List<Icon> listIcon = iconService.getAllIcon();
+		model.addAttribute("listIcon", listIcon);
+		return "admin/icon";
+	}
+
+	@GetMapping("/admin/add-icon")
+	public String showAddIcon(Model model) {
+		Icon icon = new Icon();
+		IconForm iconForm = new IconForm();
+		iconForm.setIconImage(icon);
+		model.addAttribute("icon", iconForm);	
+		return "admin/addIcon";
+	}
+
+	@PostMapping("/admin/create-Icon")
+	public String createIcon(@ModelAttribute IconForm iconForm,
+			Model model) {
+		if(nonNull(iconForm.getIconImage())) {
+			Icon icon = iconForm.getIconImage();
+			MultipartFile bannerFile = iconForm.getIconFile();
+			if(nonNull(bannerFile)) {
+				String file = fileStorage.saveFile(bannerFile);
+				icon.setImageIcon(file);
+			}
+			iconService.addIcon(icon);
+		}
+		return "admin/dashboard";
+	}
+
+
+
+	@GetMapping("/admin/invoice")
+	public String showInvoice(Model model) {
+		List<Invoice> listInvoice = invoiceService.getListInvoice();
+		if(nonNull(listInvoice)) {
+			model.addAttribute("listInvoice", listInvoice);	
+		}
+		return "admin/invoice";
+	}
+
+
+	@GetMapping(value = "/admin/preview-pdf/{id}", produces = MediaType.APPLICATION_PDF_VALUE)
+	public ResponseEntity<byte[]> previewPDF(@PathVariable("id") String id) throws IOException {
+		HttpHeaders headers = new HttpHeaders();
+		Invoice invoice = invoiceService.getListInvoiceById(Long.parseLong(id));
+		Path path = Paths.get(invoice.getFilename());
+		byte[] fileContent = Files.readAllBytes(path);
+		headers.setContentDispositionFormData(invoice.getFilename(), invoice.getInvoiceId());        
+		headers.setContentType(MediaType.APPLICATION_PDF);
+		return ResponseEntity.ok().headers(headers).body(fileContent);
+	}
+	
+	
+	@GetMapping("/admin/delete-invoice/{id}")
+	public String deleteInvoice(@PathVariable("id") String id,Model model) {
+		invoiceService.deleteInvoice(Integer.parseInt(id));
+		List<Invoice> listInvoice = invoiceService.getListInvoice();
+		if(nonNull(listInvoice)) {
+			model.addAttribute("listInvoice", listInvoice);	
+		}
+		return "admin/invoice";
 	}
 }

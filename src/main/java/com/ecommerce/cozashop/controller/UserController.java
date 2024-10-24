@@ -4,8 +4,12 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 import java.text.MessageFormat;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,12 +27,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.ecommerce.cozashop.config.LocalDateTypeAdapter;
 import com.ecommerce.cozashop.model.Address;
 import com.ecommerce.cozashop.model.CartItem;
 import com.ecommerce.cozashop.model.LoginImage;
 import com.ecommerce.cozashop.model.LoginImageForm;
 import com.ecommerce.cozashop.model.Logo;
 import com.ecommerce.cozashop.model.LogoForm;
+import com.ecommerce.cozashop.model.OrderLine;
+import com.ecommerce.cozashop.model.ProductItem;
 import com.ecommerce.cozashop.model.UpdateUser;
 import com.ecommerce.cozashop.model.User;
 import com.ecommerce.cozashop.service.CartItemService;
@@ -36,7 +43,11 @@ import com.ecommerce.cozashop.service.CookieService;
 import com.ecommerce.cozashop.service.EmailService;
 import com.ecommerce.cozashop.service.LoginImageService;
 import com.ecommerce.cozashop.service.LogoService;
+import com.ecommerce.cozashop.service.OrderLineService;
+import com.ecommerce.cozashop.service.ProductItemService;
 import com.ecommerce.cozashop.service.UserService;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpSession;
@@ -44,7 +55,7 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 public class UserController {
 
-    private static Logger logger = LoggerFactory.getLogger(UserController.class);
+	private static Logger logger = LoggerFactory.getLogger(UserController.class);
 
 	@Autowired
 	private UserService userService;
@@ -63,16 +74,21 @@ public class UserController {
 
 	@Autowired
 	private MessageSource messageSource;
-	
+
 	@Autowired
 	private LogoService logoService;
-	
+
 	@Autowired
 	private LoginImageService loginImageService;
 
-	
+	@Autowired
+	private OrderLineService orderLineService;
+
+	@Autowired
+	private ProductItemService productItemService;
+
 	@GetMapping("/confirm-account/{email}")
-	public String confirm_account(@PathVariable("email") String email)  {
+	public String confirm_account(@PathVariable("email") String email,Model model)  {
 		logger.info("account confirmation  /confirm-account/{}",email);
 		try {
 			User user = userService.getUserByEmail(email);
@@ -93,14 +109,39 @@ public class UserController {
 				String gretting = messageSource.getMessage("label.regards",null, locale);
 				content = MessageFormat.format(content,contentCss,preheader,hello,info1,bouton,gretting);
 				logger.info("send e-mail welcome for user account {} ",email);
-				emailService.sendSimpleMessage(user.getEmail(),subject,content); 	
+				emailService.sendSimpleMessage(user.getEmail(),subject,content);
+				cookieService.deleteCookie("info");
+
+				GsonBuilder builder = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateTypeAdapter());
+				final Gson gson = builder.create();
+				List<CartItem> listCartItem = new ArrayList<CartItem>();
+				Cookie cookie = cookieService.readCookie("listCart");
+				if(nonNull(cookie)) {
+					String listCart = cookie.getValue();
+					CartItem[] array = gson.fromJson(listCart, CartItem[].class);
+					listCartItem = Arrays.asList(array);
+					if(nonNull(listCartItem)) {
+						double price = 0;
+						List<CartItem> listCartItemInfo = new ArrayList<CartItem>();
+						for (CartItem cartItem:listCartItem) {
+							ProductItem productItem = productItemService.getProductById(cartItem.getItem().getId());
+							CartItem cart = new CartItem();
+							cart.setItem(productItem);
+							cart.setQty(cartItem.getQty());
+							price = price + (cartItem.getQty() * productItem.getPrice());
+							listCartItemInfo.add(cart);
+						}
+						model.addAttribute("totalPrice", price);
+						model.addAttribute("listCartItemInfo", listCartItemInfo);
+					}
+				}
 			}
 		} catch (Exception e) {
 			logger.error("error confirmation account for id {} => {}",email,e.getMessage() );
 		}
 		return "redirect:/";
 	}
-	
+
 	@GetMapping("/login")
 	public String showLogin(Model model) {
 
@@ -111,7 +152,7 @@ public class UserController {
 		LogoForm logoForm = new LogoForm();
 		logoForm.setLogo(logo);
 		model.addAttribute("logo", logoForm);
-		
+
 		LoginImage loginImage = loginImageService.getLoginImage();
 		LoginImageForm loginForm = new LoginImageForm();
 		loginForm.setLoginImage(loginImage);
@@ -179,6 +220,35 @@ public class UserController {
 			} else {
 				user.setLocal(locale);
 				userService.registerAccount(user);
+				User userDatabase = userService.getUserByEmail(user.getEmail());
+				GsonBuilder builder = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateTypeAdapter());
+				List<CartItem> listCartItem = new ArrayList<CartItem>();
+				final Gson gson = builder.create();
+				Cookie cookie = cookieService.readCookie("listCart");
+				if(nonNull(cookie)) {
+					String listCart = cookie.getValue();
+					CartItem[] array = gson.fromJson(listCart, CartItem[].class);
+					listCartItem = Arrays.asList(array);
+					if(nonNull(listCartItem)) {
+						double price = 0;
+						List<CartItem> listCartItemInfo = new ArrayList<CartItem>();
+						for (CartItem cartItem:listCartItem) {
+							cartItem.setUser(userDatabase);
+							cartItemService.addToCart(cartItem);
+							ProductItem productItem = productItemService.getProductById(cartItem.getItem().getId());
+							CartItem cart = new CartItem();
+							cart.setItem(productItem);
+							cart.setQty(cartItem.getQty());
+							price = price + (cartItem.getQty() * productItem.getPrice());
+							listCartItemInfo.add(cart);
+						}
+
+						model.addAttribute("totalPrice", price);
+						model.addAttribute("listCartItemInfo", listCartItemInfo);
+					}
+
+				}
+
 				String content = com.ecommerce.cozashop.config.ResourceUtils.getFileContent("file/create-account-email.html");
 				String preheader = messageSource.getMessage("label.init-preheader-account",null, locale);
 				String subject = messageSource.getMessage("label.init-create-account",null, locale);
@@ -190,9 +260,8 @@ public class UserController {
 				String regards = messageSource.getMessage("label.regards",null, locale);
 				content = MessageFormat.format(content,contentCss,preheader,greeting,info1,user.getEmail(),mailboutton,info2,regards);
 				emailService.sendSimpleMessage(user.getEmail(),subject,content); 
-				String info = messageSource.getMessage("label.info-create-account",null, locale);
-				model.addAttribute("info", info);
-				return "account/login";
+				Cookie cookieEmail = cookieService.create("info", info1, 30);
+				return "redirect:/";
 			}
 		} catch (Exception e) {
 			String info = messageSource.getMessage("label.error-create-account",null, locale);
@@ -201,9 +270,6 @@ public class UserController {
 			return "account/register";
 		}
 	}
-
-
-
 
 
 	@GetMapping("/my-account")
@@ -215,7 +281,8 @@ public class UserController {
 		Authentication authentification = SecurityContextHolder.getContext().getAuthentication();
 		if(nonNull(authentification) && !( authentification instanceof AnonymousAuthenticationToken)) {
 			User user = (User) authentification.getPrincipal();
-			List<CartItem> list = cartItemService.getAllProductCartWithUser(user.getId()); 
+			Map<LocalDate,List<OrderLine>> mapOrder = orderLineService.findAllOrderLineByUserId(user.getId());
+			model.addAttribute("listOrderLine", mapOrder);
 			model.addAttribute("mail", user.getEmail());
 			model.addAttribute("firstName", user.getFirst_name());
 			model.addAttribute("lastname", user.getLast_name());

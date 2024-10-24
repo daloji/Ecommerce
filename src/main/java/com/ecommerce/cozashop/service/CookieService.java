@@ -52,6 +52,20 @@ public class CookieService {
         }
         return null;
     }
+    
+    public Cookie readCookieClear(String name) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie c : cookies) {
+                if (c.getName().equalsIgnoreCase(name)) {
+                    String decodeValue = new String(c.getValue());
+                    c.setValue(decodeValue);
+                    return c;
+                }
+            }
+        }
+        return null;
+    }
 
     public Cookie readCookie(String name, HttpServletRequest req) {
         Cookie[] cookies = req.getCookies();

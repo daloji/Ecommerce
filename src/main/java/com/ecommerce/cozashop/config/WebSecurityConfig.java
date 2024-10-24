@@ -27,7 +27,7 @@ public class WebSecurityConfig {
 			                         "/admin/banner","admin/delete-block/*","/admin/delete-category/*","/admin/delete-product/*","/admin/logo","/admin/add-logo","/admin/block","/admin/add-block",
 			                          "/admin/add-banner","/admin/order","/admin/delete-banner/*","/actuator/health/*","/admin/slider","/admin/add-slider",
 			                          "/admin/edit-block/*","/admin/edit-slider/*", "/admin/edit-user/*","/admin/delete-user/*","/admin/users","admin/roles","admin/add-roles","admin/dashboard","/admin/product-inventory",
-			                          "/admin/delete-login/*","/admin/order-line/*","/admin/order/action-update","/admin/order-to-deliver","/admin/add-login"};
+			                         "/admin/delete-invoice/*","/admin/preview-pdf/*", "admin/invoice","/admin/icon", "/admin/add-icon","/admin/delete-login/*","/admin/order-line/*","/admin/order/action-update","/admin/order-to-deliver","/admin/add-login"};
 	
     @Autowired
     private UserService userService;
@@ -41,7 +41,7 @@ public class WebSecurityConfig {
 		http
 		.authorizeHttpRequests(authConfig -> {
 			authConfig.requestMatchers(HttpMethod.GET, authorizedURL).permitAll();
-			authConfig.requestMatchers(HttpMethod.POST,"/admin/create-login","/admin/create-block", "/admin/create-slider","/admin/create-logo","/admin/edit-user","/admin/create-banner","/admin/create-role","/admin/create-product","/admin/create-category","/admin/login","/reset/new-password","/register-new","/reset-password","/update-user").permitAll();
+			authConfig.requestMatchers(HttpMethod.POST,"/admin/create-Icon","/admin/create-login","/admin/create-block", "/admin/create-slider","/admin/create-logo","/admin/edit-user","/admin/create-banner","/admin/create-role","/admin/create-product","/admin/create-category","/admin/login","/reset/new-password","/register-new","/reset-password","/update-user").permitAll();
 			authConfig.anyRequest().authenticated();
 			/*authConfig.requestMatchers(HttpMethod.GET, "/user").hasRole("USER");
 			authConfig.requestMatchers(HttpMethod.GET, "/admin").hasRole("ADMIN");
@@ -50,6 +50,16 @@ public class WebSecurityConfig {
 			authConfig.requestMatchers(HttpMethod.GET, "/authorities").hasAnyRole("DEVELOPER");
 			authConfig.anyRequest().authenticated();*/
 		})
+		/*.headers()
+		.frameOptions().sameOrigin()
+		.httpStrictTransportSecurity().disable();*/
+		//.headers().frameOptions().sameOrigin().httpStrictTransportSecurity().disable()
+		.headers(headers -> headers
+				.defaultsDisabled()
+				.cacheControl()
+		        //.frameOptions(frameOptions -> frameOptions
+		         // .disable())
+		        )
 		.formLogin(login -> {
 			login.loginPage("/login");
 			login.defaultSuccessUrl("/");
